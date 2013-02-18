@@ -1,12 +1,12 @@
 # encoding: utf-8
 require 'csv'
-require 'pry-debugger'
 
-require_relative 'efo_nelfo/version'
-require_relative 'efo_nelfo/order'
-require_relative 'efo_nelfo/order/head'
-require_relative 'efo_nelfo/order/line'
-require_relative 'efo_nelfo/order/item'
+require 'efo_nelfo/version'
+require 'efo_nelfo/property'
+require 'efo_nelfo/order'
+require 'efo_nelfo/order/head'
+require 'efo_nelfo/order/line'
+require 'efo_nelfo/order/item'
 
 module EfoNelfo
   CSV_OPTIONS = {
