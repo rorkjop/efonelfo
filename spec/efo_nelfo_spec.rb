@@ -1,12 +1,11 @@
 # encoding: utf-8
-# require_relative '../lib/efo_nelfo'
-$: << File.expand_path('../../lib', __FILE__)
+# $: << File.expand_path('../../lib', __FILE__)
 require 'efo_nelfo'
 
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'minitest/pride'
-# require 'pry-debugger'
+require 'pry-debugger'
 
 def csv(filename)
   File.expand_path("../samples/#{filename}", __FILE__)
