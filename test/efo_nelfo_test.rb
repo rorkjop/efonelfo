@@ -1,15 +1,37 @@
-require_relative '../lib/efo_nelfo'
+# encoding: utf-8
+# require_relative '../lib/efo_nelfo'
+$: << File.expand_path('../../lib', __FILE__)
+require 'efo_nelfo'
 
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'minitest/pride'
-require 'pry-debugger'
+# require 'pry-debugger'
 
 def csv(filename)
   File.expand_path("../samples/#{filename}", __FILE__)
 end
 
 describe EfoNelfo do
+
+  describe "properties" do
+    it "is accessible as alias" do
+      head = EfoNelfo::Order::Head.new
+      head.buyer_id = "123"
+      head.KjøpersId.must_equal "123"
+    end
+
+    it "can update the variable using the alias" do
+      head = EfoNelfo::Order::Head.new
+      head.KjøpersId = "foo"
+      head.buyer_id.must_equal "foo"
+    end
+
+    it "should be valid" do
+      EfoNelfo::Order::Head.new.valid?.must_equal true
+    end
+
+  end
 
   describe ".parse" do
 

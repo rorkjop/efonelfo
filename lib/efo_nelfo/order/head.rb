@@ -2,7 +2,13 @@
 module EfoNelfo
 
   class Order::Head
-    attr_accessor :lines, :post_type, :version, :format
+    include EfoNelfo::Property
+
+    attr_accessor :lines
+
+    property :post_type,  limit: 8, type: String, required: true, alias: :PostType
+    property :format,     limit: 8, type: String, required: true, alias: :Format
+    property :version,    limit: 8, type: String, required: true, alias: :Versjon
 
     def initialize(*args)
       @lines = []
