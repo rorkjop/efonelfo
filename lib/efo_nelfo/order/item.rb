@@ -3,10 +3,12 @@ module EfoNelfo
   class Order::Item
     attr_accessor :type, :number, :name, :description
 
-    def initialize(args)
-      args.each do |attr, value|
-        send "#{attr}=", value
-      end
+    def initialize(*args)
+    	if args.first.is_a? Hash
+	      args.first.each do |attr, value|
+	        send "#{attr}=", value
+	      end
+	    end
     end
 
   end

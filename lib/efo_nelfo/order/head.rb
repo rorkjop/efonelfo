@@ -4,7 +4,15 @@ module EfoNelfo
   class Order::Head
     attr_accessor :lines, :post_type, :version, :format
 
-    def initialize(row)
+    def initialize(*args)
+      @lines = []
+
+      if args && args.first.is_a?(Array)
+        parse(args.first)
+      end
+    end
+
+    def parse(row)
       @post_type = row[0]
       @format    = row[1]
       @version   = row[2]
