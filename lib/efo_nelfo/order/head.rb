@@ -9,6 +9,7 @@ module EfoNelfo
     property :post_type,  limit: 8, type: String, required: true, alias: :PostType
     property :format,     limit: 8, type: String, required: true, alias: :Format
     property :version,    limit: 8, type: String, required: true, alias: :Versjon
+    property :buyer_id,   limit: 8, type: String, required: true, alias: :KjøpersId
 
     def initialize(*args)
       @lines = []
