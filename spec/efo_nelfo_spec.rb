@@ -47,7 +47,7 @@ describe EfoNelfo do
 
     describe "when passing in invalid file" do
       it "raises an exception" do
-        lambda { EfoNelfo.parse 'foo' }.must_raise EfoNelfo::UnknownFileType
+        lambda { EfoNelfo.parse 'foo' }.must_raise Errno::ENOENT
       end
     end
 
