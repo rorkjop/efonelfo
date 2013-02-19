@@ -10,6 +10,8 @@ require 'efo_nelfo/v40/order/line'
 require 'efo_nelfo/v40/order/item'
 
 module EfoNelfo
+  class UnknownFileType < StandardError; end
+
   CSV_OPTIONS = {
     col_sep: ';',
     headers: false,
@@ -22,9 +24,9 @@ module EfoNelfo
   class << self
     def parse(filename)
       case File.basename(filename)[0]
-      when "B" then model = V40::Order.new
+        when "B" then model = V40::Order.new
       else
-        raise "Unknown filetype: #{filename}"
+        raise UnknownFileType.new "Don't know how to parse '#{filename}'"
       end
 
       csv = CSV.open filename, CSV_OPTIONS
