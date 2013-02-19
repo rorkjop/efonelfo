@@ -1,24 +1,40 @@
 # EfoNelfo
 
-TODO: Write a gem description
+Supported versions:
 
-## Installation
+* 4.0
 
-Add this line to your application's Gemfile:
+Supported formats:
 
-    gem 'efo_nelfo'
+* Bestilling
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install efo_nelfo
 
 ## Usage
 
-TODO: Write usage instructions here
+Importing a CSV file:
+
+    # EfoNelfo.parse_csv "B12345678.332.csv"    # => EfoNelfo::Order
+
+Making a CSV file (TODO):
+
+    # order = EfoNelfo::Order.new
+    # order.heads << EfoNelfo::V40::Order::Head.new customer_id: '123', foo: 'bar'
+    # order.heads.last.lines << EfoNelfo::V40::Order::Line.new foo: '442', bar: '1123'
+    # order.to_csv
+
+## TODO
+
+* Export to json
+* Export to csv
+* Support more filetypes
+* Support more versions
+* Support XML
+
+## Resources
+
+* http://www.efo.no/Portals/5/docs/ImplementasjonsGuide%20EFONELFO%204.0.pdf
+
+
 
 ## Contributing
 
