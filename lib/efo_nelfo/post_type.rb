@@ -4,6 +4,8 @@ module EfoNelfo
     include EfoNelfo::Property
     include EfoNelfo::AttributeAssignment
 
+    attr_reader :post_type
+
     @modules = []
 
     class << self
@@ -18,21 +20,6 @@ module EfoNelfo
 
     def initialize(*args)
       initialize_attributes *args
-      if args && args.first.is_a?(Array)
-        parse args.first
-      end
-
-      # if args && args.first.is_a?(Hash)
-      #   args.first.each do |attr, value|
-      #     send "#{attr}=", value
-      #   end
-      # elsif args && args.first.is_a?(Array)
-      #   parse(args.first)
-      # end
-    end
-
-    def parse(row)
-      # implemented in subclasses
     end
 
   end

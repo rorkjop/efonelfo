@@ -1,7 +1,6 @@
 module EfoNelfo
-  class Order
-
-    module V40
+  module V40
+    class Order
 
       class Item
         include EfoNelfo::AttributeAssignment

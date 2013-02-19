@@ -15,26 +15,30 @@ describe EfoNelfo do
 
   describe ".post_type_for" do
     it "finds module based on posttype and format" do
-      EfoNelfo.post_type_for("BH", "4.0").must_equal EfoNelfo::Order::V40::Head
-      EfoNelfo.post_type_for("BL", "4.0").must_equal EfoNelfo::Order::V40::Line
+      EfoNelfo.post_type_for("BH", "4.0").must_equal EfoNelfo::V40::Order
+      EfoNelfo.post_type_for("BL", "4.0").must_equal EfoNelfo::V40::Order::Line
     end
   end
 
   describe "properties" do
     it "is accessible as alias" do
-      head = EfoNelfo::Order::V40::Head.new
-      head.buyer_id = "123"
-      head.KjøpersId.must_equal "123"
+      order = EfoNelfo::V40::Order.new
+      order.buyer_id = "123"
+      order.KjøpersId.must_equal "123"
     end
 
     it "can update the variable using the alias" do
-      head = EfoNelfo::Order::V40::Head.new
-      head.KjøpersId = "foo"
-      head.buyer_id.must_equal "foo"
+      order = EfoNelfo::V40::Order.new
+      order.KjøpersId = "foo"
+      order.buyer_id.must_equal "foo"
     end
 
     it "should be valid" do
-      EfoNelfo::Order::V40::Head.new.valid?.must_equal true
+      EfoNelfo::V40::Order.new.valid?.must_equal true
+    end
+
+    it "has custom setters" do
+      EfoNelfo::V40::Order.new(delivery_date: "20110402").delivery_date.must_be_kind_of Date
     end
 
   end
@@ -54,46 +58,40 @@ describe EfoNelfo do
       # end
 
       it "parses the file and returns an Order" do
-        efo = EfoNelfo.parse csv('B650517.032.csv')
-        efo.must_be_instance_of EfoNelfo::Order
+        EfoNelfo.parse(csv('B650517.032.csv')).must_be_instance_of EfoNelfo::V40::Order
       end
 
-      it "adds a Order::Head" do
-        efo = EfoNelfo.parse csv('B650517.032.csv')
-        efo.heads[0].must_be_instance_of EfoNelfo::Order::V40::Head
+      it "the order contains order information" do
+        order = EfoNelfo.parse(csv('B650517.032.csv'))
+        order.post_type.must_equal 'BH'
+        order.post_type_human.must_equal 'Bestilling Hodepost'
+        order.format.must_equal 'EFONELFO'
+        order.version.must_equal '4.0'
       end
 
-      it "the head contains order information" do
-        head = EfoNelfo.parse(csv('B650517.032.csv')).heads.first
-        head.post_type.must_equal 'BH'
-        head.post_type_human.must_equal 'Bestilling Hodepost'
-        head.format.must_equal 'EFONELFO'
-        head.version.must_equal '4.0'
-      end
+      it "the order contains orderlines" do
+        order = EfoNelfo.parse(csv('B650517.032.csv'))
 
-      it "the head contains orderlines" do
-        head = EfoNelfo.parse(csv('B650517.032.csv')).heads.first
-
-        line = head.lines.first
-        line.must_be_instance_of EfoNelfo::Order::V40::Line
+        line = order.lines.first
+        line.must_be_instance_of EfoNelfo::V40::Order::Line
 
         line.post_type.must_equal 'BL'
         line.post_type_human.must_equal 'Bestilling vareLinjepost'
 
-        line.line_no.must_equal '1'
-        line.order_ref.must_equal '1465'
-        line.count.must_equal 2.0
+        line.index.must_equal 1
+        line.order_number.must_equal '1465'
+        line.item_count.must_equal 200
         line.price_unit.must_equal "EA"
-        line.buyer_item_no.must_be_nil
+        line.buyer_item_number.must_be_nil
         line.delivery_date.must_equal Date.new(2010, 6, 1)
         line.buyer_ref.must_be_nil
         line.splitable.must_equal true
         line.replacable.must_equal true
 
-        line.item.type.must_equal '1'
-        line.item.number.must_equal '8000502'
-        line.item.name.must_equal '200L OSO STD BEREDER SUPER S'
-        line.item.description.must_be_nil
+        line.item_type.must_equal 1
+        line.item_number.must_equal '8000502'
+        line.item_name.must_equal '200L OSO STD BEREDER SUPER S'
+        line.item_description.must_be_nil
       end
 
     end
@@ -101,7 +99,7 @@ describe EfoNelfo do
     # Parse all files in the samples directory
     Dir.glob("test/samples/*.csv").each do |file|
       it "can parse #{file}" do
-        EfoNelfo.parse(file).must_be_instance_of EfoNelfo::Order
+        EfoNelfo.parse(file).must_be_instance_of EfoNelfo::V40::Order
       end
     end
 
