@@ -3,6 +3,7 @@ module EfoNelfo
   module V40
     class Order
       class Line < EfoNelfo::PostType
+        VERSION = "4.0"
 
         # It's important to list the property in the same order as specified in the specs
         property :index,             alias: :LinjeNr,    limit: 4,   type: Integer
@@ -19,8 +20,10 @@ module EfoNelfo
         property :splitable,         alias: :DelLev,     type: :Boolean, default: true
         property :replacable,        alias: :AltKode,    type: :Boolean, default: true
 
+        attr_accessor :text
+
         def self.can_parse?(post_type, version)
-          ['BL', 'IL'].include? post_type
+          ['BL', 'IL'].include?(post_type) && version = VERSION
         end
 
         def initialize(*args)

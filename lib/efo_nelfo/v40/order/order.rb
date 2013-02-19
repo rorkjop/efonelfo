@@ -2,7 +2,8 @@
 module EfoNelfo
   module V40
     class Order < EfoNelfo::PostType
-      # attr_accessor :lines
+      VERSION = "4.0"
+
       attr_reader   :version, :format, :lines
 
       # It's important to list the property in the same order as specified in the specs
@@ -54,7 +55,7 @@ module EfoNelfo
 
 
       def self.can_parse?(post_type, version)
-        ['BH', 'IH'].include? post_type
+        ['BH', 'IH'].include?(post_type) #&& version == VERSION
       end
 
       def initialize(*args)
@@ -65,9 +66,14 @@ module EfoNelfo
         super
       end
 
-      def add(order_line)
-        order_line.index = lines.length + 1
-        lines << order_line
+      def add(post_type)
+        case
+        when post_type.is_a?(Order::Line)
+          post_type.index = lines.length + 1
+          lines << post_type
+        when post_type.is_a?(Order::Text)
+          lines.last.text = post_type.text
+        end
       end
 
       def post_type_human

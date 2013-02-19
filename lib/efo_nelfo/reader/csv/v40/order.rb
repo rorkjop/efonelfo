@@ -11,23 +11,34 @@ module EfoNelfo
           end
 
           def parse
-            row = csv.first
+            # Create the post type based on the first row
+            object = parse_head csv.first
 
-            order = EfoNelfo::V40::Order.new
-            order.class.properties.each_with_index do |property, i|
-              order.send "#{property.first}=", row[i+3]
-            end
-
+            # Read rest of the file
             csv.each do |row|
-              line = EfoNelfo::V40::Order::Line.new
+              klass = EfoNelfo.post_type_for(row[0], row[1])
+              next if klass.nil?
+
+              line = klass.new
               line.class.properties.each_with_index do |property, i|
                 line.send "#{property.first}=", row[i+1]
               end
 
-              order.add line
+              object.add line
             end
 
-            order
+            object
+          end
+
+          def parse_head(row)
+            klass = EfoNelfo.post_type_for(row[0], row[1])
+            raise UnsupportedPostType.new("Don't know how to handle #{row[0]}") if klass.nil?
+
+            object = klass.new #EfoNelfo::V40::Order.new
+            object.class.properties.each_with_index do |property, i|
+              object.send "#{property.first}=", row[i+3]
+            end
+            object
           end
 
         end

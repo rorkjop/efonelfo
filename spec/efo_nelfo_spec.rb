@@ -94,6 +94,12 @@ describe EfoNelfo do
         line.item_description.must_be_nil
       end
 
+      it "adds text lines" do
+        order = EfoNelfo.parse(csv('B650517.032.csv'))
+        line  = order.lines.first
+        line.text.must_equal "Her er litt fritekst"
+      end
+
     end
 
     # Parse all files in the samples directory
