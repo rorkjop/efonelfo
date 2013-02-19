@@ -1,9 +1,14 @@
 module EfoNelfo
-  module V40
-    module Reader
-      module CSV
+  module Reader
+    module CSV
+      module V40
 
-        class Order < Base
+        class Order < EfoNelfo::Reader::CSV::Base
+
+          def self.supported_file?(filename)
+            File.basename(filename)[0] == 'B'
+            # ['.csv', '.txt'].include?(File.basename(filename))
+          end
 
           def parse
             row = csv.first
