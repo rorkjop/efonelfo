@@ -14,9 +14,9 @@ module EfoNelfo
         csv.each do |row|
           case row[0]
           when 'BH'
-            @heads << Order::Head.new(row)
+            @heads << Head.new(row)
           when 'BL'
-            @heads.last.lines << Order::Line.new(row)
+            @heads.last.lines << Line.new(row)
           end
         end
       end
