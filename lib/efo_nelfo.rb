@@ -4,10 +4,10 @@ require 'csv'
 require 'efo_nelfo/version'
 require 'efo_nelfo/property'
 require 'efo_nelfo/post_type'
-require 'efo_nelfo/order'
-require 'efo_nelfo/order/head'
-require 'efo_nelfo/order/line'
-require 'efo_nelfo/order/item'
+require 'efo_nelfo/v40/order'
+require 'efo_nelfo/v40/order/head'
+require 'efo_nelfo/v40/order/line'
+require 'efo_nelfo/v40/order/item'
 
 module EfoNelfo
   CSV_OPTIONS = {
@@ -22,7 +22,7 @@ module EfoNelfo
   class << self
     def parse(filename)
       case File.basename(filename)[0]
-      when "B" then model = Order.new
+      when "B" then model = V40::Order.new
       else
         raise "Unknown filetype: #{filename}"
       end
