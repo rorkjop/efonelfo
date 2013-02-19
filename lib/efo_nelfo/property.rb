@@ -6,6 +6,8 @@ module EfoNelfo
       base.send :extend, ClassMethods
     end
 
+    # Instance methods
+
     def valid?
       # TODO: check validations against properties
       true
