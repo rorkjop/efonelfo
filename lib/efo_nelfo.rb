@@ -3,6 +3,7 @@ require 'csv'
 
 require 'efo_nelfo/version'
 require 'efo_nelfo/property'
+require 'efo_nelfo/post_type'
 require 'efo_nelfo/order'
 require 'efo_nelfo/order/head'
 require 'efo_nelfo/order/line'
@@ -18,16 +19,24 @@ module EfoNelfo
     force_quotes: true
   }
 
-  def self.parse(filename)
-    case File.basename(filename)[0]
-    when "B" then model = Order.new
-    else
-      raise "Unknown filetype: #{filename}"
+  class << self
+    def parse(filename)
+      case File.basename(filename)[0]
+      when "B" then model = Order.new
+      else
+        raise "Unknown filetype: #{filename}"
+      end
+
+      csv = CSV.open filename, CSV_OPTIONS
+      model.parse csv
+      model
     end
 
-    csv = CSV.open filename, CSV_OPTIONS
-    model.parse csv
-    model
+    def post_type_for(type, version)
+      EfoNelfo::PostType.for type, version
+    end
+
   end
+
 
 end

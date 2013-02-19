@@ -3,7 +3,6 @@ module EfoNelfo
   module Property
 
     def self.included(base)
-
       base.send :extend, ClassMethods
     end
 

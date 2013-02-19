@@ -1,15 +1,17 @@
 # encoding: utf-8
 module EfoNelfo
 
-  class Order::Head
-    include EfoNelfo::Property
-
+  class Order::Head < EfoNelfo::PostType
     attr_accessor :lines
 
     property :post_type,  limit: 8, type: String, required: true, alias: :PostType
     property :format,     limit: 8, type: String, required: true, alias: :Format
     property :version,    limit: 8, type: String, required: true, alias: :Versjon
     property :buyer_id,   limit: 8, type: String, required: true, alias: :KjøpersId
+
+    def self.can_parse?(type, version)
+      type == "BH"
+    end
 
     def initialize(*args)
       @lines = []

@@ -1,12 +1,17 @@
 # encoding: utf-8
 module EfoNelfo
-  class Order::Line
+
+  class Order::Line < EfoNelfo::PostType
     attr_accessor :post_type, :line_no, :order_ref, :item, :count, :price_unit, :buyer_item_no, :delivery_date, :buyer_ref, :splitable, :replacable
+
+    def self.can_parse?(type, version)
+      type == "BL"
+    end
 
     def initialize(*args)
       if args && args.first.is_a?(Array)
         parse args.first
-      elsif args && args.first.is_a?(Hash)        
+      elsif args && args.first.is_a?(Hash)
         args.first.each do |attr, value|
           send "#{attr}=", value
         end

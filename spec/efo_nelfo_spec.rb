@@ -13,6 +13,13 @@ end
 
 describe EfoNelfo do
 
+  describe ".post_type_for" do
+    it "finds module based on posttype and format" do
+      EfoNelfo.post_type_for("BH", "4.0").must_equal EfoNelfo::Order::Head
+      EfoNelfo.post_type_for("BL", "4.0").must_equal EfoNelfo::Order::Line
+    end
+  end
+
   describe "properties" do
     it "is accessible as alias" do
       head = EfoNelfo::Order::Head.new
