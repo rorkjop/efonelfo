@@ -7,7 +7,6 @@ module EfoNelfo
 
           def self.supported_file?(filename)
             File.basename(filename)[0] == 'B'
-            # ['.csv', '.txt'].include?(File.basename(filename))
           end
 
           def parse
