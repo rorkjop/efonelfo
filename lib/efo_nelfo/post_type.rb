@@ -22,6 +22,10 @@ module EfoNelfo
       initialize_attributes *args
     end
 
+    # This is for adding posttypes
+    def add(something)
+    end
+
   end
 
 end
