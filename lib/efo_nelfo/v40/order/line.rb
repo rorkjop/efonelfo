@@ -3,7 +3,10 @@ module EfoNelfo
   module V40
     class Order
       class Line < EfoNelfo::PostType
-        VERSION = "4.0"
+        POST_TYPES = {
+          'BL' => 'Bestilling vareLinjepost',
+          'IL' => 'Forespørsel vareLinjepost'
+        }
 
         # It's important to list the property in the same order as specified in the specs
         property :index,             alias: :LinjeNr,    limit: 4,   type: Integer
@@ -21,23 +24,6 @@ module EfoNelfo
         property :replacable,        alias: :AltKode,    type: :Boolean, default: true
 
         attr_accessor :text
-
-        def self.can_parse?(post_type, version)
-          ['BL', 'IL'].include?(post_type) && version = VERSION
-        end
-
-        def initialize(*args)
-          super
-          @post_type = "BL"
-        end
-
-        def post_type_human
-          case post_type
-          when 'BL' then 'Bestilling vareLinjepost'
-          when 'IL' then 'Forespørsel vareLinjepost'
-          end
-        end
-
       end
 
     end

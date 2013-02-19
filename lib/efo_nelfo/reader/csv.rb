@@ -30,7 +30,7 @@ module EfoNelfo
         # Read rest of the file and add them to the head
         csv.each do |row|
           # Find the correct posttype module for given posttype and version
-          klass = EfoNelfo.post_type_for(row[0], row[1])
+          klass = find_post_type row
           next if klass.nil?
 
           line = initialize_object_with_properties klass, row, 1
@@ -42,8 +42,12 @@ module EfoNelfo
 
       private
 
+      def find_post_type(row)
+        EfoNelfo::PostType.for(row[0], row[1])
+      end
+
       def parse_head(row)
-        klass = EfoNelfo.post_type_for(row[0], row[1])
+        klass = find_post_type row
         raise UnsupportedPostType.new("Don't know how to handle #{row[0]}") if klass.nil?
 
         initialize_object_with_properties klass, row, 3

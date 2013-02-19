@@ -2,7 +2,10 @@
 module EfoNelfo
   module V40
     class Order < EfoNelfo::PostType
-      VERSION = "4.0"
+      POST_TYPES = {
+        'BH' => 'Bestilling Hodepost',
+        'IH' => 'Forespørsel Hodepost'
+      }
 
       attr_reader   :version, :format, :lines
 
@@ -54,16 +57,10 @@ module EfoNelfo
       property :seller_country,              alias: :SLandK,        limit: 2
 
 
-      def self.can_parse?(post_type, version)
-        ['BH', 'IH'].include?(post_type) #&& version == VERSION
-      end
-
       def initialize(*args)
-        @version   = '4.0'
-        @format    = 'EFONELFO'
-        @post_type = 'BH'
-        @lines     = []
         super
+        @format    = 'EFONELFO'
+        @lines     = []
       end
 
       def add(post_type)
@@ -76,12 +73,6 @@ module EfoNelfo
         end
       end
 
-      def post_type_human
-        case post_type
-          when 'BH' then 'Bestilling Hodepost'
-          when 'IH' then 'Forespørsel Hodepost'
-        end
-      end
     end
   end
 end
