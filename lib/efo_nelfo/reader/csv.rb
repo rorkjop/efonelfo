@@ -13,45 +13,45 @@ module EfoNelfo
         force_quotes: true
       }
 
-      attr_reader :csv
+      attr_reader :csv, :data
 
       def self.supported_file?(filename)
         File.basename(filename)[0] == 'B'
       end
 
-      def initialize(filename)
-        @csv = ::CSV.open filename, CSV_OPTIONS
+      def initialize(options)
+        if options[:filename]
+          @data = File.read(options[:filename])
+        else
+          @data = options[:data]
+        end
+
+        @csv = ::CSV.new @data, CSV_OPTIONS
       end
 
       def parse
         # Create the head object based on the first row
         head = parse_head csv.first
+        head.source = @data
 
         # Read rest of the file and add them to the head
         csv.each do |row|
           # Find the correct posttype module for given posttype and version
-          klass = find_post_type row
+          klass = EfoNelfo::PostType.for row[0]
           next if klass.nil?
 
           line = initialize_object_with_properties klass, row, 1
           head.add line
         end
 
-        # Add the CSV source to the head
-        csv.rewind
-        head.source = csv.to_io.read
         head
       end
 
       private
 
-      def find_post_type(row)
-        EfoNelfo::PostType.for(row[0], row[1])
-      end
-
       def parse_head(row)
-        klass = find_post_type row
-        raise UnsupportedPostType.new("Don't know how to handle #{row[0]}") if klass.nil?
+        klass = EfoNelfo::PostType.for row[0], row[2]
+        raise EfoNelfo::UnsupportedPostType.new("Don't know how to handle v#{row[2]} of #{row[0]}") if klass.nil?
 
         initialize_object_with_properties klass, row, 3
       end

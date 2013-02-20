@@ -7,7 +7,7 @@ require 'efo_nelfo/attribute_assignment'
 require 'efo_nelfo/property'
 require 'efo_nelfo/post_type'
 
-# v4.0
+# EfoNelfo v4.0 modules
 require 'efo_nelfo/v40/order/order'
 require 'efo_nelfo/v40/order/line'
 require 'efo_nelfo/v40/order/text'
@@ -19,17 +19,12 @@ module EfoNelfo
 
   class << self
 
-    def parse(filename)
-      model = initialize_import_module_from_filename(filename)
-      model.parse
+    def load(filename)
+      Reader::CSV.new(filename: filename).parse
     end
 
-    private
-
-    # This is supposed to determine whether to use CSV or XML.
-    # Currently, only CSV is supported.
-    def initialize_import_module_from_filename(filename)
-      Reader::CSV.new filename
+    def parse(data)
+      Reader::CSV.new(data: data).parse
     end
 
   end

@@ -13,12 +13,16 @@ module EfoNelfo
         @modules << klass
       end
 
-      def for(type, version)
+      def for(type, version=nil)
         @modules.select { |mod| mod.can_parse?(type, version) }.first
       end
 
-      def can_parse?(post_type, version)
-        self::POST_TYPES.keys.include?(post_type) #&& version == self::VERSION
+      def can_parse?(post_type, check_version=nil)
+        if check_version
+          self::POST_TYPES.keys.include?(post_type) && check_version == version
+        else
+          self::POST_TYPES.keys.include?(post_type)
+        end
       end
 
       # Extracts version number from class namespace.

@@ -1,5 +1,4 @@
 # encoding: utf-8
-# $: << File.expand_path('../../lib', __FILE__)
 require 'efo_nelfo'
 
 require 'minitest/spec'
@@ -7,6 +6,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require 'pry-debugger'
 
+# helper method that returns full path to csv files
 def csv(filename)
   File.expand_path("../samples/#{filename}", __FILE__)
 end
@@ -34,24 +34,35 @@ describe EfoNelfo do
 
   describe ".parse" do
 
+    it "parses CSV and does the same as .parse" do
+      filename = csv('B650517.032.csv')
+      parsed = EfoNelfo.parse File.read(filename)
+      loaded = EfoNelfo.load filename
+      parsed.source.must_equal loaded.source
+    end
+
+  end
+
+  describe ".load" do
+
     describe "when passing in invalid file" do
       it "raises an exception" do
-        lambda { EfoNelfo.parse 'foo' }.must_raise Errno::ENOENT
+        lambda { EfoNelfo.load 'foo' }.must_raise Errno::ENOENT
       end
     end
 
     describe "passing a Order file" do
 
-      # it "uses the correct version" do
-      #   EfoNelfo.parse(csv('B123.v3.csv')).must_raise EfoNelfo::UnsupportedVersion
-      # end
+      it "uses the correct version" do
+        lambda { EfoNelfo.load(csv('B123.v3.csv')) }.must_raise EfoNelfo::UnsupportedPostType
+      end
 
       it "parses the file and returns an Order" do
-        EfoNelfo.parse(csv('B650517.032.csv')).must_be_instance_of EfoNelfo::V40::Order
+        EfoNelfo.load(csv('B650517.032.csv')).must_be_instance_of EfoNelfo::V40::Order
       end
 
       it "the order contains order information" do
-        order = EfoNelfo.parse(csv('B650517.032.csv'))
+        order = EfoNelfo.load(csv('B650517.032.csv'))
         order.post_type.must_equal 'BH'
         order.post_type_human.must_equal 'Bestilling Hodepost'
         order.format.must_equal 'EFONELFO'
@@ -59,7 +70,7 @@ describe EfoNelfo do
       end
 
       it "the order contains orderlines" do
-        order = EfoNelfo.parse(csv('B650517.032.csv'))
+        order = EfoNelfo.load(csv('B650517.032.csv'))
 
         line = order.lines.first
         line.must_be_instance_of EfoNelfo::V40::Order::Line
@@ -84,22 +95,22 @@ describe EfoNelfo do
       end
 
       it "adds text lines" do
-        order = EfoNelfo.parse(csv('B650517.032.csv'))
+        order = EfoNelfo.load(csv('B650517.032.csv'))
         line  = order.lines.first
         line.text.must_equal "Her er litt fritekst"
       end
 
       it "stores the contents file in the Order object" do
         filename = csv('B650517.032.csv')
-        order = EfoNelfo.parse(filename)
+        order = EfoNelfo.load(filename)
         order.source.must_equal File.read(filename)
       end
     end
 
-    # Parse all files in the samples directory
+    # Loads all files in the samples directory
     Dir.glob("test/samples/*.csv").each do |file|
-      it "can parse #{file}" do
-        EfoNelfo.parse(file).must_be_instance_of EfoNelfo::V40::Order
+      it "can load #{file}" do
+        EfoNelfo.load(file).must_be_instance_of EfoNelfo::V40::Order
       end
     end
 
