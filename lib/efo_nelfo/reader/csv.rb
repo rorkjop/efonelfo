@@ -15,10 +15,6 @@ module EfoNelfo
 
       attr_reader :csv, :data
 
-      def self.supported_file?(filename)
-        File.basename(filename)[0] == 'B'
-      end
-
       def initialize(options)
         if options[:filename]
           @data = File.read(options[:filename])
