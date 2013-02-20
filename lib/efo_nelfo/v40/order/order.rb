@@ -66,12 +66,22 @@ module EfoNelfo
 
       def add(post_type)
         case
-        when post_type.is_a?(Order::Line)
-          post_type.index = lines.length + 1
-          lines << post_type
-        when post_type.is_a?(Order::Text)
-          lines.last.text = post_type.text
+        when post_type.is_a?(Order::Line) then add_order_line(post_type)
+        when post_type.is_a?(Order::Text) then add_text_to_order_line(post_type)
         end
+      end
+
+      private
+
+      # Appends a order line to the order
+      def add_order_line(line)
+        line.index = lines.length + 1
+        lines << line
+      end
+
+      # Add text to the last added orderline
+      def add_text_to_order_line(text)
+        lines.last.text = text.text
       end
 
     end
