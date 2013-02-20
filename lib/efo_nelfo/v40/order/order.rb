@@ -8,6 +8,7 @@ module EfoNelfo
       }
 
       attr_reader   :version, :format, :lines
+      attr_accessor :source
 
       # It's important to list the property in the same order as specified in the specs
       property :seller_id,                   alias: :SelgersId,     limit: 14

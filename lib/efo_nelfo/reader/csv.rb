@@ -37,6 +37,9 @@ module EfoNelfo
           head.add line
         end
 
+        # Add the CSV source to the head
+        csv.rewind
+        head.source = csv.to_io.read
         head
       end
 

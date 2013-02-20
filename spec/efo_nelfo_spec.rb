@@ -100,6 +100,11 @@ describe EfoNelfo do
         line.text.must_equal "Her er litt fritekst"
       end
 
+      it "stores the contents file in the Order object" do
+        filename = csv('B650517.032.csv')
+        order = EfoNelfo.parse(filename)
+        order.source.must_equal File.read(filename)
+      end
     end
 
     # Parse all files in the samples directory
