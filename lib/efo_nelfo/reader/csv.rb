@@ -18,11 +18,12 @@ module EfoNelfo
       def initialize(options)
         if options[:filename]
           @data = File.read(options[:filename])
+          @csv = ::CSV.open options[:filename], CSV_OPTIONS
         else
           @data = options[:data]
+          @csv = ::CSV.new @data, CSV_OPTIONS
         end
 
-        @csv = ::CSV.new @data, CSV_OPTIONS
       end
 
       def parse
