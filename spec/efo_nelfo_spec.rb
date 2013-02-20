@@ -13,13 +13,6 @@ end
 
 describe EfoNelfo do
 
-  # describe ".post_type_for" do
-  #   it "finds module based on posttype and format" do
-  #     EfoNelfo.post_type_for("BH", "4.0").must_equal EfoNelfo::V40::Order
-  #     EfoNelfo.post_type_for("BL", "4.0").must_equal EfoNelfo::V40::Order::Line
-  #   end
-  # end
-
   describe "properties" do
     it "is accessible as alias" do
       order = EfoNelfo::V40::Order.new
@@ -31,10 +24,6 @@ describe EfoNelfo do
       order = EfoNelfo::V40::Order.new
       order.KjøpersId = "foo"
       order.buyer_id.must_equal "foo"
-    end
-
-    it "should be valid" do
-      EfoNelfo::V40::Order.new.valid?.must_equal true
     end
 
     it "has custom setters" do

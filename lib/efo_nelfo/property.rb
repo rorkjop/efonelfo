@@ -6,13 +6,6 @@ module EfoNelfo
       base.send :extend, ClassMethods
     end
 
-    # Instance methods
-
-    def valid?
-      # TODO: check validations against properties
-      true
-    end
-
     module ClassMethods
 
       # Creates an attribute with given name.
