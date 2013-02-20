@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'pry-debugger'
 
 # Common stuff
 require 'efo_nelfo/version'
