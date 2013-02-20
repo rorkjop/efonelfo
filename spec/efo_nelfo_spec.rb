@@ -108,9 +108,9 @@ describe EfoNelfo do
     end
 
     # Loads all files in the samples directory
-    Dir.glob("test/samples/*.csv").each do |file|
+    %w(B028579.594.csv B028579.596.csv B650517.031.csv B028579.595.csv B028579.597.csv B650517.030.csv B650517.032.csv).each do |file|
       it "can load #{file}" do
-        EfoNelfo.load(file).must_be_instance_of EfoNelfo::V40::Order
+        EfoNelfo.load(csv(file)).must_be_instance_of EfoNelfo::V40::Order
       end
     end
 
