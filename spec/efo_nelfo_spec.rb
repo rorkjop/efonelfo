@@ -34,7 +34,7 @@ describe EfoNelfo do
 
   describe ".parse" do
 
-    it "parses CSV and does the same as .parse" do
+    it "parses CSV and does the same as .load" do
       filename = csv('B650517.032.csv')
       parsed = EfoNelfo.parse File.read(filename)
       loaded = EfoNelfo.load filename
