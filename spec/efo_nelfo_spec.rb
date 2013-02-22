@@ -1,10 +1,5 @@
 # encoding: utf-8
-require 'efo_nelfo'
-
-require 'minitest/spec'
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'pry-debugger'
+require 'spec_helper'
 
 # helper method that returns full path to csv files
 def csv(filename)
