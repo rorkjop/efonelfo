@@ -10,7 +10,7 @@ module EfoNelfo
         row_sep: "\r\n",
         encoding: "iso-8859-1",
         quote_char: "\x00",
-        force_quotes: true
+        force_quotes: false
       }
 
       attr_reader :csv, :data
