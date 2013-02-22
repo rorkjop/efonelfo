@@ -36,7 +36,7 @@ module EfoNelfo
           klass = EfoNelfo::PostType.for row[0]
           next if klass.nil?
 
-          line = initialize_object_with_properties klass, row, 1
+          line = initialize_object_with_properties klass, row
           head.add line
         end
 
@@ -49,13 +49,13 @@ module EfoNelfo
         klass = EfoNelfo::PostType.for row[0], row[2]
         raise EfoNelfo::UnsupportedPostType.new("Don't know how to handle v#{row[2]} of #{row[0]}") if klass.nil?
 
-        initialize_object_with_properties klass, row, 3
+        initialize_object_with_properties klass, row
       end
 
-      def initialize_object_with_properties(klass, columns, offset)
+      def initialize_object_with_properties(klass, columns)
         object = klass.new
         object.class.properties.each_with_index do |property, i|
-          object.send "#{property.first}=", columns[i+offset]
+          object.send "#{property.first}=", columns[i]
         end
         object
       end

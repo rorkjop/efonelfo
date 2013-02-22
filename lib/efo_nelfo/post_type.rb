@@ -2,7 +2,6 @@ module EfoNelfo
 
   class PostType
     include EfoNelfo::Property
-    include EfoNelfo::AttributeAssignment
 
     attr_reader :post_type
 

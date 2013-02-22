@@ -1,6 +1,7 @@
 module EfoNelfo
 
   module Property
+    include EfoNelfo::AttributeAssignment
 
     def self.included(base)
       base.send :extend, ClassMethods

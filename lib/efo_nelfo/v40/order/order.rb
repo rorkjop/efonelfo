@@ -7,10 +7,13 @@ module EfoNelfo
         'IH' => 'Forespørsel Hodepost'
       }
 
-      attr_reader   :version, :format, :lines
+      attr_reader   :lines
       attr_accessor :source
 
       # It's important to list the property in the same order as specified in the specs
+      property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
+      property :format,                      alias: :Format,        limit: 8, default: 'EFONELFO'
+      property :version,                     alias: :Versjon,       limit: 3, default: version
       property :seller_id,                   alias: :SelgersId,     limit: 14
       property :buyer_id,                    alias: :KjøpersId,     limit: 14, required: true
       property :order_number,                alias: :BestNr,        limit: 10, required: true
@@ -60,7 +63,6 @@ module EfoNelfo
 
       def initialize(*args)
         super
-        @format    = 'EFONELFO'
         @lines     = []
       end
 
