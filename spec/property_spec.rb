@@ -1,10 +1,11 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe EfoNelfo::Property do
 
   class Foo
     include EfoNelfo::Property
-    property :foo, alias: "Foobar", limit: 3, default: 'I am foo'
+    property :foo, alias: "Føbar", limit: 3, default: 'I am foo'
     property :bar
     property :date, type: :date
     property :number, type: :integer
@@ -30,9 +31,9 @@ describe EfoNelfo::Property do
 
   it "adds an alias getter and setter for foo" do
     obj.foo = 'Test'
-    obj.Foobar.must_equal 'Test'
-    obj.Foobar = 'Hacked'
-    obj.Foobar.must_equal 'Hacked'
+    obj.Føbar.must_equal 'Test'
+    obj.Føbar = 'Hacked'
+    obj.Føbar.must_equal 'Hacked'
     obj.foo.must_equal 'Hacked'
   end
 
@@ -41,10 +42,23 @@ describe EfoNelfo::Property do
     obj.foo.must_equal 'I am foo'
   end
 
+  it "can be assigned nil values" do
+    obj.number = nil
+    obj.number.must_be_nil
+  end
+
   describe "property types" do
-    it "handles :date" do
-      obj.date = "20100504"
-      obj.date.must_be_kind_of Date
+    describe ":date" do
+      it "converts strings to dates" do
+        obj.date = "20100504"
+        obj.date.must_be_kind_of Date
+      end
+
+      it "accepts a Date" do
+        obj.date = Date.new 2010, 5, 4
+        obj.date.must_be_kind_of Date
+      end
+
     end
 
     it "handles :integer" do
@@ -52,13 +66,32 @@ describe EfoNelfo::Property do
       obj.number.must_equal 2
     end
 
-    it "handles :boolean" do
-      obj.doable?.must_equal false
-      obj.doable = 'J'
-      obj.doable.must_equal true
-      obj.doable = false
-      obj.doable.must_equal false
+    describe ":boolean" do
+      it "returns true when assigning blank string" do
+        obj.doable = ''
+        obj.doable?.must_equal true
+      end
+
+      it "returns true when assigning nil" do
+        obj.doable = nil
+        obj.doable?.must_equal true
+      end
+
+      it "returns true when assigning 'J'" do
+        obj.doable = 'J'
+        obj.doable?.must_equal true
+      end
+
+      it "returns false" do
+        obj.doable = false
+        obj.doable?.must_equal false
+
+        obj.doable = 'N'
+        obj.doable?.must_equal false
+      end
+
     end
+
 
   end
 

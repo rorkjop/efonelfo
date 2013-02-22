@@ -23,9 +23,18 @@ module EfoNelfo
 
     def format_value(value, type)
       case type
-      when :integer then value.to_i
-      when :date    then Date.parse(value)
-      when :boolean then value.nil? || (value == true || value == 'J')
+      when :integer
+        value.nil? ? nil : value.to_i
+      when :date
+        if value.nil?
+          nil
+        elsif value.kind_of? String
+          Date.parse value
+        else
+          value
+        end
+      when :boolean
+        value.nil? || value == true || value == 'J' || value == '' ? true : false
       else
         value
       end
@@ -82,7 +91,7 @@ module EfoNelfo
       # Creates a name? accessor
       def create_question_for(name)
         define_method "#{name}?" do
-          attributes[name]
+          attributes[name] == true
         end
       end
 
