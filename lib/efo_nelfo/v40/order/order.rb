@@ -18,7 +18,7 @@ module EfoNelfo
       property :buyer_id,                    alias: :KjøpersId,     limit: 14, required: true
       property :order_number,                alias: :BestNr,        limit: 10, required: true
       property :customer_id,                 alias: :KundeNr,       limit: 10, required: true
-      property :contract_type,               alias: :AvtaleIdMrk,   limit: 1, type: Integer
+      property :contract_type,               alias: :AvtaleIdMrk,   limit: 1, type: :integer
       property :contract_id,                 alias: :AvtaleId,      limit: 10
       property :buyer_order_number,          alias: :KOrdNr,        limit: 10
       property :buyer_customer_id,           alias: :KundAvd,       limit: 10
@@ -33,7 +33,7 @@ module EfoNelfo
       property :confirmation_type,           alias: :ObkrType,      limit: 2
       property :transport_type,              alias: :TransportMåte, limit: 25
       property :transport_msg,               alias: :Melding,       limit: 25
-      property :delivery_date,               alias: :LevDato,       type: Date
+      property :delivery_date,               alias: :LevDato,       type: :date
       property :origin,                      alias: :BestOpp,       limit: 2
 
       property :receiver_delivery_location,  alias: :LAdrLok,       limit: 14

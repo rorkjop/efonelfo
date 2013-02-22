@@ -6,6 +6,9 @@ describe EfoNelfo::Property do
     include EfoNelfo::Property
     property :foo, alias: "Foobar", limit: 3, default: 'I am foo'
     property :bar
+    property :date, type: :date
+    property :number, type: :integer
+    property :doable, type: :boolean, default: false
   end
 
   let(:obj) { Foo.new }
@@ -36,6 +39,27 @@ describe EfoNelfo::Property do
   it "assigns default values" do
     obj.bar.must_be_nil
     obj.foo.must_equal 'I am foo'
+  end
+
+  describe "property types" do
+    it "handles :date" do
+      obj.date = "20100504"
+      obj.date.must_be_kind_of Date
+    end
+
+    it "handles :integer" do
+      obj.number = "2"
+      obj.number.must_equal 2
+    end
+
+    it "handles :boolean" do
+      obj.doable?.must_equal false
+      obj.doable = 'J'
+      obj.doable.must_equal true
+      obj.doable = false
+      obj.doable.must_equal false
+    end
+
   end
 
   describe ".properties" do

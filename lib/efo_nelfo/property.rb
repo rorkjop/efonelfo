@@ -7,8 +7,31 @@ module EfoNelfo
       base.send :extend, ClassMethods
     end
 
-    module ClassMethods
+    def attributes
+      @attributes ||= initialize_default_attributes
+    end
 
+    def properties
+      self.class.properties
+    end
+
+    private
+
+    def initialize_default_attributes
+      properties.inject({}) { |h,(name,options)| h[name] = options[:default]; h }
+    end
+
+    def format_value(value, type)
+      case type
+      when :integer then value.to_i
+      when :date    then Date.parse(value)
+      when :boolean then value.nil? || (value == true || value == 'J')
+      else
+        value
+      end
+    end
+
+    module ClassMethods
       # Creates an attribute with given name.
       #
       # Options
@@ -19,62 +42,59 @@ module EfoNelfo
       #
       def property(name, options={})
         options = {
-          type: String,
-          required: false
+          type: :string,
+          required: false,
         }.update options
 
+        name = name.to_sym
+
         # Store property info in @properties
-        @properties ||= {}
-        raise EfoNelfo::DuplicateProperty if @properties.has_key?(name)
-        @properties[name] = options
+        raise EfoNelfo::DuplicateProperty if properties.has_key?(name)
+        properties[name] = options
 
-        # Add an attr_accessor
-        attr_accessor name
-
-        # Define custom setter method
-        if options[:type] != String
-          define_setter_method_for_type(name, options[:type])
-        end
-
-        # Add an alias
-        if options[:alias]
-          define_method(options[:alias]) do
-            send name
-          end
-
-          define_method("#{options[:alias]}=") do |val|
-            send "#{name}=", val
-          end
-        end
+        create_reader_for(name, options)
+        create_setter_for(name, options) unless options[:read_only]
+        create_question_for(name)        if options[:type] == :boolean
+        create_alias_for(name, options)  if options[:alias]
       end
 
+      # Returns all properties
       def properties
-        @properties
+        @_properties ||= {}
       end
 
       private
 
-      def define_setter_method_for_type(name, type)
-        send "define_#{type.to_s.downcase}_setter", name
-      end
-
-      def define_integer_setter(name)
-        define_method("#{name}=") do |val|
-          instance_variable_set :"@#{name}", val.to_i
+      # Creates an attribute accessor for name
+      def create_reader_for(name, options)
+        define_method name do
+          attributes[name]
         end
       end
 
-      def define_boolean_setter(name)
-        define_method("#{name}=") do |val|
-          value = val.nil? || val == 'J'
-          instance_variable_set :"@#{name}", value
+      # Creates an attribute setter for name
+      def create_setter_for(name, options)
+        define_method "#{name}=" do |value|
+          attributes[name] = format_value(value, options[:type])
         end
       end
 
-      def define_date_setter(name)
-        define_method("#{name}=") do |val|
-          date = Date.parse(val) rescue nil
-          instance_variable_set :"@#{name}", date
+      # Creates a name? accessor
+      def create_question_for(name)
+        define_method "#{name}?" do
+          attributes[name]
+        end
+      end
+
+      def create_alias_for(name, options)
+        define_method(options[:alias]) do
+          send name
+        end
+
+        unless options[:read_only]
+          define_method("#{options[:alias]}=") do |val|
+            send "#{name}=", val
+          end
         end
       end
 
