@@ -107,4 +107,13 @@ describe EfoNelfo::Property do
     end
   end
 
+  describe "#to_a" do
+    it "returns array of all attributes in correct order" do
+      obj.date = Date.new 2012, 5, 30
+      obj.number = 3
+      obj.doable = true
+      obj.to_a.must_equal ["I am foo", nil, "20120530", 3, "J"]
+    end
+  end
+
 end

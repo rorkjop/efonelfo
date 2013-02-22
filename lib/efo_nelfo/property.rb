@@ -15,6 +15,10 @@ module EfoNelfo
       self.class.properties
     end
 
+    def to_a
+      properties.keys.map { |prop| formatted_for_csv(prop) }
+    end
+
     private
 
     def initialize_default_attributes
@@ -35,6 +39,20 @@ module EfoNelfo
         end
       when :boolean
         value.nil? || value == true || value == 'J' || value == '' ? true : false
+      else
+        value
+      end
+    end
+
+    def formatted_for_csv(attr)
+      value = send(attr)
+
+      type  = properties[attr][:type]
+      case type
+      when :date
+        value ? value.strftime("%Y%m%d") : nil
+      when :boolean
+        value == true ? "J" : nil
       else
         value
       end
