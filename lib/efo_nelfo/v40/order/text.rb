@@ -12,6 +12,10 @@ module EfoNelfo
         property :post_type, alias: :PostType, limit: 2, default: 'BT'
         property :text,      alias: :FriTekst, limit: 30
 
+        def to_s
+          text
+        end
+
       end
     end
   end

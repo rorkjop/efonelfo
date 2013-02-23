@@ -25,6 +25,12 @@ module EfoNelfo
         property :replacable,        alias: :AltKode,    type: :boolean, default: true
 
         attr_accessor :text
+
+        # Returns an array with one or more elements
+        def to_a
+          [ super, text.to_a ].reject(&:empty?)
+        end
+
       end
 
     end

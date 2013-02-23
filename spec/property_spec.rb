@@ -10,6 +10,7 @@ describe EfoNelfo::Property do
     property :date, type: :date
     property :number, type: :integer
     property :doable, type: :boolean, default: false
+    property :immutable, read_only: true, default: 'NO'
   end
 
   let(:obj) { Foo.new }
@@ -45,6 +46,11 @@ describe EfoNelfo::Property do
   it "can be assigned nil values" do
     obj.number = nil
     obj.number.must_be_nil
+  end
+
+  it "readonly attributes cannot be changed" do
+    lambda { obj.immutable = 'test' }.must_raise NoMethodError
+    obj.immutable.must_equal 'NO'
   end
 
   describe "property types" do
@@ -112,7 +118,7 @@ describe EfoNelfo::Property do
       obj.date = Date.new 2012, 5, 30
       obj.number = 3
       obj.doable = true
-      obj.to_a.must_equal ["I am foo", nil, "20120530", 3, "J"]
+      obj.to_a.must_equal ["I am foo", nil, "20120530", 3, "J", "NO"]
     end
   end
 

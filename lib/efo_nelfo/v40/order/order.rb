@@ -60,16 +60,34 @@ module EfoNelfo
       property :seller_office,               alias: :SPostSted,     limit: 35
       property :seller_country,              alias: :SLandK,        limit: 2
 
-
       def initialize(*args)
         super
-        @lines     = []
+        @lines = EfoNelfo::Array.new
       end
 
       def add(post_type)
         case
         when post_type.is_a?(Order::Line) then add_order_line(post_type)
         when post_type.is_a?(Order::Text) then add_text_to_order_line(post_type)
+        end
+      end
+
+      def to_a
+        arr = [ super ]
+        lines.each do |line|
+          arr += line.to_a
+        end
+
+        # arr
+        # binding.pry
+        # [ super, lines.to_a]
+      end
+
+      def to_csv
+        CSV.generate EfoNelfo::Reader::CSV::CSV_OPTIONS do |csv|
+          to_a.each do |row|
+            csv << row unless row.empty?
+          end
         end
       end
 
@@ -83,7 +101,7 @@ module EfoNelfo
 
       # Add text to the last added orderline
       def add_text_to_order_line(text)
-        lines.last.text = text.text
+        lines.last.text = text
       end
 
     end
