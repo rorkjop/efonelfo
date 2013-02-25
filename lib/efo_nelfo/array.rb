@@ -2,12 +2,10 @@ module EfoNelfo
 
   class Array < ::Array
     def to_a
-      # map(&:to_a)[0]
-      arr = []
-      each { |i| arr += i.to_a }
-
-      arr
-      # map &:to_a
+      map(&:to_a).flatten(1)
+      # arr = []
+      # each { |line| arr += line.to_a }
+      # arr
     end
   end
 

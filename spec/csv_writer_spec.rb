@@ -5,6 +5,20 @@ describe EfoNelfo::V40::Order do
   let(:order) { EfoNelfo::V40::Order.new buyer_id: '123', customer_id: '456' }
   let(:csv)   { order.to_csv }
 
+  describe "to_a" do
+
+    it "returns an array" do
+      order.to_a.size.must_equal 1
+    end
+
+    it "includes the lines" do
+      order.add EfoNelfo::V40::Order::Line.new
+      order.add EfoNelfo::V40::Order::Line.new
+      order.to_a.size.must_equal 3
+    end
+
+  end
+
   describe "to_csv" do
     before do
       order.add EfoNelfo::V40::Order::Line.new(order_number: 'foo', item_name: 'Ware')

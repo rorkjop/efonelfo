@@ -73,14 +73,7 @@ module EfoNelfo
       end
 
       def to_a
-        arr = [ super ]
-        lines.each do |line|
-          arr += line.to_a
-        end
-
-        # arr
-        # binding.pry
-        # [ super, lines.to_a]
+        [ super ] + lines.to_a
       end
 
       def to_csv
