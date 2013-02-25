@@ -88,7 +88,7 @@ module EfoNelfo
 
       # Appends a order line to the order
       def add_order_line(line)
-        line.index = lines.length + 1
+        line.index = lines.count + 1
         lines << line
       end
 
