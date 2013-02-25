@@ -25,7 +25,7 @@ module EfoNelfo
       property :project_id,                  alias: :ProsjektNr,    limit: 10
       property :buyer_warehouse_location,    alias: :KLagerMrk,     limit: 1
       property :buyer_warehouse,             alias: :KLager,        limit: 14
-      property :seller_warehoure_location,   alias: :SLagerMrk,     limit: 1
+      property :seller_warehouse_location,   alias: :SLagerMrk,     limit: 1
       property :seller_warehouse,            alias: :SLager,        limit: 14
       property :external_ref,                alias: :EksternRef,    limit: 36
       property :buyer_ref,                   alias: :KjøpersRef,    limit: 25
