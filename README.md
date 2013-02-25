@@ -1,5 +1,7 @@
 # EfoNelfo
 
+Gem for parsing and writing EfoNelfo documents.
+
 Supported versions:
 
 * 4.0
@@ -13,27 +15,26 @@ Supported formats:
 
 Importing a CSV file:
 
-    # EfoNelfo.parse_csv "B12345678.332.csv"    # => EfoNelfo::Order
+    # EfoNelfo.parse_csv "B12345678.332.csv"    # => EfoNelfo::V40::Order
 
-Making a CSV file (TODO):
+Exporting CSV:
 
-    # order = EfoNelfo::Order.new
-    # order.heads << EfoNelfo::V40::Order::Head.new customer_id: '123', foo: 'bar'
-    # order.heads.last.lines << EfoNelfo::V40::Order::Line.new foo: '442', bar: '1123'
+    # order = EfoNelfo::V40::Order.new
+    # order.add EfoNelfo::V40::Order::Line.new item_number: '442', order_number: 'abc'
     # order.to_csv
+
 
 ## TODO
 
 * Export to json
-* Export to csv
 * Support more filetypes
 * Support more versions
 * Support XML
 
+
 ## Resources
 
 * http://www.efo.no/Portals/5/docs/ImplementasjonsGuide%20EFONELFO%204.0.pdf
-
 
 
 ## Contributing
