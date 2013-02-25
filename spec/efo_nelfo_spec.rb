@@ -1,10 +1,5 @@
 # encoding: utf-8
-require 'efo_nelfo'
-
-require 'minitest/spec'
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'pry-debugger'
+require 'spec_helper'
 
 # helper method that returns full path to csv files
 def csv(filename)
@@ -94,10 +89,10 @@ describe EfoNelfo do
         line.item_description.must_be_nil
       end
 
-      it "adds text lines" do
+      it "adds text to orderline" do
         order = EfoNelfo.load(csv('B650517.032.csv'))
         line  = order.lines.first
-        line.text.must_equal "Her er litt fritekst"
+        line.text.to_s.must_equal "Her er litt fritekst"
       end
 
       it "stores the contents file in the Order object" do

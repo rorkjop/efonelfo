@@ -7,15 +7,18 @@ module EfoNelfo
         'IH' => 'Forespørsel Hodepost'
       }
 
-      attr_reader   :version, :format, :lines
+      attr_reader   :lines
       attr_accessor :source
 
       # It's important to list the property in the same order as specified in the specs
+      property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
+      property :format,                      alias: :Format,        limit: 8, default: 'EFONELFO'
+      property :version,                     alias: :Versjon,       limit: 3, default: version
       property :seller_id,                   alias: :SelgersId,     limit: 14
       property :buyer_id,                    alias: :KjøpersId,     limit: 14, required: true
       property :order_number,                alias: :BestNr,        limit: 10, required: true
       property :customer_id,                 alias: :KundeNr,       limit: 10, required: true
-      property :contract_type,               alias: :AvtaleIdMrk,   limit: 1, type: Integer
+      property :contract_type,               alias: :AvtaleIdMrk,   limit: 1, type: :integer
       property :contract_id,                 alias: :AvtaleId,      limit: 10
       property :buyer_order_number,          alias: :KOrdNr,        limit: 10
       property :buyer_customer_id,           alias: :KundAvd,       limit: 10
@@ -30,7 +33,7 @@ module EfoNelfo
       property :confirmation_type,           alias: :ObkrType,      limit: 2
       property :transport_type,              alias: :TransportMåte, limit: 25
       property :transport_msg,               alias: :Melding,       limit: 25
-      property :delivery_date,               alias: :LevDato,       type: Date
+      property :delivery_date,               alias: :LevDato,       type: :date
       property :origin,                      alias: :BestOpp,       limit: 2
 
       property :receiver_delivery_location,  alias: :LAdrLok,       limit: 14
@@ -57,17 +60,27 @@ module EfoNelfo
       property :seller_office,               alias: :SPostSted,     limit: 35
       property :seller_country,              alias: :SLandK,        limit: 2
 
-
       def initialize(*args)
         super
-        @format    = 'EFONELFO'
-        @lines     = []
+        @lines = EfoNelfo::Array.new
       end
 
       def add(post_type)
         case
         when post_type.is_a?(Order::Line) then add_order_line(post_type)
         when post_type.is_a?(Order::Text) then add_text_to_order_line(post_type)
+        end
+      end
+
+      def to_a
+        [ super ] + lines.to_a
+      end
+
+      def to_csv
+        CSV.generate EfoNelfo::Reader::CSV::CSV_OPTIONS do |csv|
+          to_a.each do |row|
+            csv << row unless row.empty?
+          end
         end
       end
 
@@ -81,7 +94,7 @@ module EfoNelfo
 
       # Add text to the last added orderline
       def add_text_to_order_line(text)
-        lines.last.text = text.text
+        lines.last.text = text
       end
 
     end

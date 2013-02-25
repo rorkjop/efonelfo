@@ -1,13 +1,64 @@
 module EfoNelfo
 
   module Property
+    include EfoNelfo::AttributeAssignment
 
     def self.included(base)
       base.send :extend, ClassMethods
     end
 
-    module ClassMethods
+    def attributes
+      @attributes ||= initialize_default_attributes
+    end
 
+    def properties
+      self.class.properties
+    end
+
+    def to_a
+      properties.keys.map { |prop| formatted_for_csv(prop) }
+    end
+
+    private
+
+    def initialize_default_attributes
+      properties.inject({}) { |h,(name,options)| h[name] = options[:default]; h }
+    end
+
+    def format_value(value, type)
+      case type
+      when :integer
+        value.nil? ? nil : value.to_i
+      when :date
+        if value.nil?
+          nil
+        elsif value.kind_of? String
+          Date.parse value
+        else
+          value
+        end
+      when :boolean
+        value.nil? || value == true || value == 'J' || value == '' ? true : false
+      else
+        value
+      end
+    end
+
+    def formatted_for_csv(attr)
+      value = send(attr)
+
+      type  = properties[attr][:type]
+      case type
+      when :date
+        value ? value.strftime("%Y%m%d") : nil
+      when :boolean
+        value == true ? "J" : nil
+      else
+        value
+      end
+    end
+
+    module ClassMethods
       # Creates an attribute with given name.
       #
       # Options
@@ -18,62 +69,59 @@ module EfoNelfo
       #
       def property(name, options={})
         options = {
-          type: String,
-          required: false
+          type: :string,
+          required: false,
         }.update options
 
+        name = name.to_sym
+
         # Store property info in @properties
-        @properties ||= {}
-        raise EfoNelfo::DuplicateProperty if @properties.has_key?(name)
-        @properties[name] = options
+        raise EfoNelfo::DuplicateProperty if properties.has_key?(name)
+        properties[name] = options
 
-        # Add an attr_accessor
-        attr_accessor name
-
-        # Define custom setter method
-        if options[:type] != String
-          define_setter_method_for_type(name, options[:type])
-        end
-
-        # Add an alias
-        if options[:alias]
-          define_method(options[:alias]) do
-            send name
-          end
-
-          define_method("#{options[:alias]}=") do |val|
-            send "#{name}=", val
-          end
-        end
+        create_reader_for(name, options)
+        create_setter_for(name, options) unless options[:read_only]
+        create_question_for(name)        if options[:type] == :boolean
+        create_alias_for(name, options)  if options[:alias]
       end
 
+      # Returns all properties
       def properties
-        @properties
+        @_properties ||= {}
       end
 
       private
 
-      def define_setter_method_for_type(name, type)
-        send "define_#{type.to_s.downcase}_setter", name
-      end
-
-      def define_integer_setter(name)
-        define_method("#{name}=") do |val|
-          instance_variable_set :"@#{name}", val.to_i
+      # Creates an attribute accessor for name
+      def create_reader_for(name, options)
+        define_method name do
+          attributes[name]
         end
       end
 
-      def define_boolean_setter(name)
-        define_method("#{name}=") do |val|
-          value = val.nil? || val == 'J'
-          instance_variable_set :"@#{name}", value
+      # Creates an attribute setter for name
+      def create_setter_for(name, options)
+        define_method "#{name}=" do |value|
+          attributes[name] = format_value(value, options[:type])
         end
       end
 
-      def define_date_setter(name)
-        define_method("#{name}=") do |val|
-          date = Date.parse(val) rescue nil
-          instance_variable_set :"@#{name}", date
+      # Creates a name? accessor
+      def create_question_for(name)
+        define_method "#{name}?" do
+          attributes[name] == true
+        end
+      end
+
+      def create_alias_for(name, options)
+        define_method(options[:alias]) do
+          send name
+        end
+
+        unless options[:read_only]
+          define_method("#{options[:alias]}=") do |val|
+            send "#{name}=", val
+          end
         end
       end
 
