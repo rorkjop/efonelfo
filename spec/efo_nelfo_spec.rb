@@ -27,6 +27,44 @@ describe EfoNelfo do
 
   end
 
+  describe "assign via hash" do
+    let(:json) {
+      { customer_id: "123",
+        order_number: "abc-123-efg",
+        seller_warehouse: "Somewhere",
+        label: "Some label",
+        lines: [
+          { item_type: 1, order_number: "12345", item_name: "Foo", price_unit: "NOK" },
+          { item_type: 1, order_number: "12345", item_name: "Bar", price_unit: "SEK", text: "This is freetext"},
+        ]
+      }
+    }
+    let(:order) { EfoNelfo::V40::Order.new json }
+
+    it "creates an order" do
+      order.must_be_instance_of EfoNelfo::V40::Order
+    end
+
+    it "assigns attributes" do
+      order.order_number.must_equal "abc-123-efg"
+      order.seller_warehouse.must_equal "Somewhere"
+    end
+
+    it "assigns order lines" do
+      order.lines.size.must_equal 2
+      order.lines[0].index.must_equal 1
+      order.lines[1].index.must_equal 2
+      order.lines[1].item_name.must_equal "Bar"
+    end
+
+    it "adds text to order lines" do
+      order.lines.first.text.must_be_nil
+      order.lines[1].text.must_be_instance_of EfoNelfo::V40::Order::Text
+      order.lines[1].text.to_s.must_equal "This is freetext"
+    end
+
+  end
+
   describe ".parse" do
 
     it "parses CSV and does the same as .load" do

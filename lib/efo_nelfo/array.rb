@@ -6,7 +6,7 @@ module EfoNelfo
     include Enumerable
     extend Forwardable
 
-    def_delegators :@list, :each, :<<, :last
+    def_delegators :@list, :[], :each, :<<, :last, :size, :empty?
 
     def initialize(*args)
       @list = []

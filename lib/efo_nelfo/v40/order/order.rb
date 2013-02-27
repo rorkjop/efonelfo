@@ -61,14 +61,25 @@ module EfoNelfo
       property :seller_country,              alias: :SLandK,        limit: 2
 
       def initialize(*args)
-        super
         @lines = EfoNelfo::Array.new
+        super
       end
 
       def add(post_type)
         case
-        when post_type.is_a?(Order::Line) then add_order_line(post_type)
-        when post_type.is_a?(Order::Text) then add_text_to_order_line(post_type)
+        when post_type.is_a?(Order::Line)
+          add_order_line(post_type)
+        when post_type.is_a?(Order::Text)
+          add_text_to_order_line(post_type)
+        when post_type.is_a?(Hash)
+          add_order_line(EfoNelfo::V40::Order::Line.new(post_type))
+        end
+      end
+
+      def lines=(values)
+        @lines = EfoNelfo::Array.new
+        values.each do |item|
+          add item
         end
       end
 
@@ -88,7 +99,7 @@ module EfoNelfo
 
       # Appends a order line to the order
       def add_order_line(line)
-        line.index = lines.count + 1
+        line.index = lines.size + 1
         lines << line
       end
 

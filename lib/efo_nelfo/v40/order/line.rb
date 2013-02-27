@@ -24,11 +24,19 @@ module EfoNelfo
         property :splitable,         alias: :DelLev,     type: :boolean, default: true
         property :replacable,        alias: :AltKode,    type: :boolean, default: true
 
-        attr_accessor :text
+        attr_reader :text
 
         # Returns an array with one or more elements
         def to_a
           [ super, text.to_a ].reject(&:empty?)
+        end
+
+        def text=(txt)
+          if txt.is_a? String
+            @text = EfoNelfo::V40::Order::Text.new text: txt
+          else
+            @text = txt
+          end
         end
 
       end
