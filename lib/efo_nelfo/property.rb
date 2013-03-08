@@ -45,16 +45,20 @@ module EfoNelfo
     end
 
     def formatted_for_csv(attr)
-      value = send(attr)
-
-      type  = properties[attr][:type]
-      case type
-      when :date
-        value ? value.strftime("%Y%m%d") : nil
-      when :boolean
-        value == true ? "J" : nil
+      if respond_to?("format_#{attr}")
+        value = send "format_#{attr}"
       else
-        value
+        value = send attr
+
+        type  = properties[attr][:type]
+        case type
+        when :date
+          value ? value.strftime("%Y%m%d") : nil
+        when :boolean
+          value == true ? "J" : nil
+        else
+          value
+        end
       end
     end
 

@@ -39,6 +39,10 @@ module EfoNelfo
           end
         end
 
+        def format_item_count
+          item_count ? item_count * 100 : nil
+        end
+
       end
 
     end

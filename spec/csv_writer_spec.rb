@@ -21,7 +21,7 @@ describe EfoNelfo::V40::Order do
 
   describe "to_csv" do
     before do
-      order.add EfoNelfo::V40::Order::Line.new(order_number: 'foo', item_name: 'Ware')
+      order.add EfoNelfo::V40::Order::Line.new(order_number: 'foo', item_name: 'Ware', item_count: 6, splitable: true)
       order.add EfoNelfo::V40::Order::Text.new text: 'haha'
     end
 
@@ -29,6 +29,8 @@ describe EfoNelfo::V40::Order do
       csv.must_match /;EFONELFO;/
       csv.must_match /;4.0;/
       csv.must_match /;123;/
+      csv.must_match /;600;/
+      csv.must_match /;J;/
     end
 
     it "can be parsed" do
