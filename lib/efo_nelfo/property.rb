@@ -106,7 +106,8 @@ module EfoNelfo
       # Creates an attribute setter for name
       def create_setter_for(name, options)
         define_method "#{name}=" do |value|
-          attributes[name] = format_value(value, options[:type])
+          encoded_value = value.respond_to?(:encode) ? value.encode(Encoding::ISO_8859_1) : value
+          attributes[name] = format_value(encoded_value, options[:type])
         end
       end
 

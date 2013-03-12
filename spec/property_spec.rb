@@ -30,6 +30,11 @@ describe EfoNelfo::Property do
     obj.foo.must_equal 'Test'
   end
 
+  it "converts encoding to ISO-8859-1" do
+    obj.foo = 'Sjøhest'
+    obj.foo.encoding.name.must_equal 'ISO-8859-1'
+  end
+
   it "adds an alias getter and setter for foo" do
     obj.foo = 'Test'
     obj.Føbar.must_equal 'Test'
