@@ -23,6 +23,7 @@ module EfoNelfo
           @data = options[:data]
         end
 
+        raise EfoNelfo::IllegalEncoding if @data.encoding != Encoding::ISO_8859_1
         @csv = ::CSV.new @data, CSV_OPTIONS
       end
 
