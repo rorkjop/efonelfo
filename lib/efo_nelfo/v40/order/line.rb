@@ -3,36 +3,44 @@ module EfoNelfo
   module V40
     class Order
       class Line < EfoNelfo::PostType
+        POST_TYPES = {
+          'BL' => 'Bestilling vareLinjepost',
+          'IL' => 'Forespørsel vareLinjepost'
+        }
 
         # It's important to list the property in the same order as specified in the specs
-        property :index,             alias: :LinjeNr,    limit: 4,   type: Integer
+        property :post_type,         alias: :PostType,   limit: 2,   default: 'BL'
+        property :index,             alias: :LinjeNr,    limit: 4,   type: :integer
         property :order_number,      alias: :BestNr,     limit: 10,  required: true
-        property :item_type,         alias: :VareMrk,    limit: 1,   required: true, type: Integer
+        property :item_type,         alias: :VareMrk,    limit: 1,   required: true, type: :integer
         property :item_number,       alias: :VareNr,     limit: 14,  required: true
         property :item_name,         alias: :VaBetg,     limit: 30,  required: true
         property :item_description,  alias: :VaBetg2,    limit: 30
-        property :item_count,        alias: :Ant,        limit: 9,   required: true, type: Integer
+        property :item_count,        alias: :Ant,        limit: 9,   required: true, type: :integer
         property :price_unit,        alias: :PrisEnhet,  limit: 3,   required: true
         property :buyer_item_number, alias: :KVareNr,    limit: 25
-        property :delivery_date,     alias: :LevDato,    type: Date
+        property :delivery_date,     alias: :LevDato,    type: :date
         property :buyer_ref,         alias: :KjøpersRef, limit: 25
-        property :splitable,         alias: :DelLev,     type: :Boolean, default: true
-        property :replacable,        alias: :AltKode,    type: :Boolean, default: true
+        property :splitable,         alias: :DelLev,     type: :boolean, default: true
+        property :replacable,        alias: :AltKode,    type: :boolean, default: true
 
-        def self.can_parse?(post_type, version)
-          ['BL', 'IL'].include? post_type
+        attr_reader :text
+
+        # Returns an array with one or more elements
+        def to_a
+          [ super, text.to_a ].reject(&:empty?)
         end
 
-        def initialize(*args)
-          super
-          @post_type = "BL"
-        end
-
-        def post_type_human
-          case post_type
-          when 'BL' then 'Bestilling vareLinjepost'
-          when 'IL' then 'Forespørsel vareLinjepost'
+        def text=(txt)
+          if txt.is_a? String
+            @text = EfoNelfo::V40::Order::Text.new text: txt
+          else
+            @text = txt
           end
+        end
+
+        def format_item_count
+          item_count ? item_count * 100 : nil
         end
 
       end

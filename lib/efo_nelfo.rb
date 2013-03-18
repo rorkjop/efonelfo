@@ -1,32 +1,31 @@
 # encoding: utf-8
-require 'pry-debugger'
 
+# Common stuff
 require 'efo_nelfo/version'
 require 'efo_nelfo/errors'
+require 'efo_nelfo/array'
 require 'efo_nelfo/attribute_assignment'
 require 'efo_nelfo/property'
 require 'efo_nelfo/post_type'
-require 'efo_nelfo/v40'
+
+# EfoNelfo v4.0 modules
+require 'efo_nelfo/v40/order/order'
+require 'efo_nelfo/v40/order/line'
+require 'efo_nelfo/v40/order/text'
+
+# Reader modules (import)
+require 'efo_nelfo/reader/csv'
 
 module EfoNelfo
 
   class << self
-    def parse(filename)
-      model = initialize_module_from_filename(filename)
-      # TODO: detect which reader class to use based on filename/content
-      model.parse
+
+    def load(filename)
+      Reader::CSV.new(filename: filename).parse
     end
 
-    def initialize_module_from_filename(filename)
-      case File.basename(filename)[0]
-        when "B" then EfoNelfo::V40::Reader::CSV::Order.new filename
-      else
-        raise UnknownFileType.new "Don't know how to parse '#{filename}'"
-      end
-    end
-
-    def post_type_for(type, version)
-      EfoNelfo::PostType.for type, version
+    def parse(data)
+      Reader::CSV.new(data: data).parse
     end
 
   end

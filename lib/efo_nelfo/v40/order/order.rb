@@ -2,22 +2,30 @@
 module EfoNelfo
   module V40
     class Order < EfoNelfo::PostType
-      # attr_accessor :lines
-      attr_reader   :version, :format, :lines
+      POST_TYPES = {
+        'BH' => 'Bestilling Hodepost',
+        'IH' => 'Forespørsel Hodepost'
+      }
+
+      attr_reader   :lines
+      attr_accessor :source
 
       # It's important to list the property in the same order as specified in the specs
+      property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
+      property :format,                      alias: :Format,        limit: 8, default: 'EFONELFO'
+      property :version,                     alias: :Versjon,       limit: 3, default: version
       property :seller_id,                   alias: :SelgersId,     limit: 14
       property :buyer_id,                    alias: :KjøpersId,     limit: 14, required: true
       property :order_number,                alias: :BestNr,        limit: 10, required: true
       property :customer_id,                 alias: :KundeNr,       limit: 10, required: true
-      property :contract_type,               alias: :AvtaleIdMrk,   limit: 1, type: Integer
+      property :contract_type,               alias: :AvtaleIdMrk,   limit: 1, type: :integer
       property :contract_id,                 alias: :AvtaleId,      limit: 10
       property :buyer_order_number,          alias: :KOrdNr,        limit: 10
       property :buyer_customer_id,           alias: :KundAvd,       limit: 10
       property :project_id,                  alias: :ProsjektNr,    limit: 10
       property :buyer_warehouse_location,    alias: :KLagerMrk,     limit: 1
       property :buyer_warehouse,             alias: :KLager,        limit: 14
-      property :seller_warehoure_location,   alias: :SLagerMrk,     limit: 1
+      property :seller_warehouse_location,   alias: :SLagerMrk,     limit: 1
       property :seller_warehouse,            alias: :SLager,        limit: 14
       property :external_ref,                alias: :EksternRef,    limit: 36
       property :buyer_ref,                   alias: :KjøpersRef,    limit: 25
@@ -25,7 +33,7 @@ module EfoNelfo
       property :confirmation_type,           alias: :ObkrType,      limit: 2
       property :transport_type,              alias: :TransportMåte, limit: 25
       property :transport_msg,               alias: :Melding,       limit: 25
-      property :delivery_date,               alias: :LevDato,       type: Date
+      property :delivery_date,               alias: :LevDato,       type: :date
       property :origin,                      alias: :BestOpp,       limit: 2
 
       property :receiver_delivery_location,  alias: :LAdrLok,       limit: 14
@@ -52,30 +60,54 @@ module EfoNelfo
       property :seller_office,               alias: :SPostSted,     limit: 35
       property :seller_country,              alias: :SLandK,        limit: 2
 
-
-      def self.can_parse?(post_type, version)
-        ['BH', 'IH'].include? post_type
-      end
-
       def initialize(*args)
-        @version   = '4.0'
-        @format    = 'EFONELFO'
-        @post_type = 'BH'
-        @lines     = []
+        @lines = EfoNelfo::Array.new
         super
       end
 
-      def add(order_line)
-        order_line.index = lines.length + 1
-        lines << order_line
-      end
-
-      def post_type_human
-        case post_type
-          when 'BH' then 'Bestilling Hodepost'
-          when 'IH' then 'Forespørsel Hodepost'
+      def add(post_type)
+        case
+        when post_type.is_a?(Order::Line)
+          add_order_line(post_type)
+        when post_type.is_a?(Order::Text)
+          add_text_to_order_line(post_type)
+        when post_type.is_a?(Hash)
+          add_order_line(EfoNelfo::V40::Order::Line.new(post_type))
         end
       end
+
+      def lines=(values)
+        @lines = EfoNelfo::Array.new
+        values.each do |item|
+          add item
+        end
+      end
+
+      def to_a
+        [ super ] + lines.to_a
+      end
+
+      def to_csv
+        CSV.generate EfoNelfo::Reader::CSV::CSV_OPTIONS do |csv|
+          to_a.each do |row|
+            csv << row unless row.empty?
+          end
+        end
+      end
+
+      private
+
+      # Appends a order line to the order
+      def add_order_line(line)
+        line.index = lines.size + 1
+        lines << line
+      end
+
+      # Add text to the last added orderline
+      def add_text_to_order_line(text)
+        lines.last.text = text
+      end
+
     end
   end
 end
