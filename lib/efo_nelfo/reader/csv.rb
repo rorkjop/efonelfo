@@ -8,7 +8,6 @@ module EfoNelfo
         col_sep: ';',
         headers: false,
         row_sep: "\r\n",
-        encoding: "iso-8859-1",
         quote_char: "\x00",
         force_quotes: false,
         skip_blanks: true
@@ -18,12 +17,11 @@ module EfoNelfo
 
       def initialize(options)
         if options[:filename]
-          @data = File.read(options[:filename], encoding: CSV_OPTIONS[:encoding])
+          @data = File.read(options[:filename], encoding: Encoding::ISO_8859_1)
         else
           @data = options[:data]
         end
 
-        raise EfoNelfo::IllegalEncoding if @data.encoding != Encoding::ISO_8859_1
         @csv = ::CSV.new @data, CSV_OPTIONS
       end
 

@@ -44,14 +44,17 @@ module EfoNelfo
       end
     end
 
+    # Format value for given attribute
     def formatted_for_csv(attr)
+
       if respond_to?("format_#{attr}")
         value = send "format_#{attr}"
       else
         value = send attr
 
         type  = properties[attr][:type]
-        case type
+
+        value = case type
         when :date
           value ? value.strftime("%Y%m%d") : nil
         when :boolean
@@ -60,6 +63,7 @@ module EfoNelfo
           value
         end
       end
+      value.respond_to?(:encode) ? value.encode(Encoding::ISO_8859_1) : value
     end
 
     module ClassMethods
@@ -106,8 +110,7 @@ module EfoNelfo
       # Creates an attribute setter for name
       def create_setter_for(name, options)
         define_method "#{name}=" do |value|
-          encoded_value = value.respond_to?(:encode) ? value.encode(Encoding::ISO_8859_1) : value
-          attributes[name] = format_value(encoded_value, options[:type])
+          attributes[name] = format_value(value, options[:type])
         end
       end
 
