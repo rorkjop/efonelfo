@@ -2,13 +2,12 @@
 module EfoNelfo
   module V40
     class Order < EfoNelfo::PostType
+      include PostHeadType
+
       POST_TYPES = {
         'BH' => 'Bestilling Hodepost',
         'IH' => 'Forespørsel Hodepost'
       }
-
-      attr_reader   :lines
-      attr_accessor :source
 
       # It's important to list the property in the same order as specified in the specs
       property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
@@ -60,11 +59,6 @@ module EfoNelfo
       property :seller_office,               alias: :SPostSted,     limit: 35
       property :seller_country,              alias: :SLandK,        limit: 2
 
-      def initialize(*args)
-        @lines = EfoNelfo::Array.new
-        super
-      end
-
       def add(post_type)
         case
         when post_type.is_a?(Order::Line)
@@ -74,17 +68,6 @@ module EfoNelfo
         when post_type.is_a?(Hash)
           add_order_line(EfoNelfo::V40::Order::Line.new(post_type))
         end
-      end
-
-      def lines=(values)
-        @lines = EfoNelfo::Array.new
-        values.each do |item|
-          add item
-        end
-      end
-
-      def to_a
-        [ super ] + lines.to_a
       end
 
       def to_csv

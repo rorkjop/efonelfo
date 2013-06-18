@@ -7,6 +7,7 @@ require 'efo_nelfo/array'
 require 'efo_nelfo/attribute_assignment'
 require 'efo_nelfo/property'
 require 'efo_nelfo/post_type'
+require 'efo_nelfo/post_head_type'
 
 # EfoNelfo v4.0 modules
 require 'efo_nelfo/v40/order/order'
