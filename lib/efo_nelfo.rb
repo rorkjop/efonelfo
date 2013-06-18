@@ -13,6 +13,7 @@ require 'efo_nelfo/post_head_type'
 require 'efo_nelfo/v40/order/order'
 require 'efo_nelfo/v40/order/line'
 require 'efo_nelfo/v40/order/text'
+require 'efo_nelfo/v40/product/product'
 
 # Reader modules (import)
 require 'efo_nelfo/reader/csv'

@@ -84,6 +84,32 @@ describe EfoNelfo do
       end
     end
 
+    describe "passing a Product file" do
+      let(:nelfo) { EfoNelfo.load(csv('V4_varefil.csv')) }
+
+      it { nelfo.must_be_instance_of EfoNelfo::V40::Product }
+
+      it "loads the order" do
+        nelfo.format.must_equal "EFONELFO"
+        nelfo.version.must_equal "4.0"
+        nelfo.post_type.must_equal "VH"
+        nelfo.SelgersId.must_equal "NO939765360MVA"
+        nelfo.KjøpersId.must_be_nil
+        nelfo.KundeNr.must_be_nil
+        nelfo.from_date.must_equal Date.new(2011, 9, 1)
+        nelfo.to_date.must_equal Date.new(2011,12,31)
+        nelfo.currency.must_equal "NOK"
+        nelfo.contract_id.must_be_nil
+        nelfo.seller_name.must_equal "ETMAN DISTRIBUSJON AS"
+        nelfo.seller_address1.must_match /GAMLE EIGER.+VEI 87/
+        nelfo.seller_address2.must_be_nil
+        nelfo.seller_zip.must_equal "4370"
+        nelfo.seller_office.must_equal "EGERSUND"
+        nelfo.seller_country.must_equal "NO"
+      end
+
+    end
+
     describe "passing a Order file" do
 
       it "uses the correct version" do
