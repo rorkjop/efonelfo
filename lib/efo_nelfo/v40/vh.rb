@@ -1,6 +1,6 @@
 module EfoNelfo
   module V40
-    class Product < EfoNelfo::PostType
+    class VH < EfoNelfo::PostType
       include PostHeadType
 
       POST_TYPES = {

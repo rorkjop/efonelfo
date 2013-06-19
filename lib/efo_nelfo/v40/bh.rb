@@ -1,6 +1,6 @@
 module EfoNelfo
   module V40
-    class Order < EfoNelfo::PostType
+    class BH < EfoNelfo::PostType
       include PostHeadType
 
       POST_TYPES = {
@@ -60,12 +60,12 @@ module EfoNelfo
 
       def add(post_type)
         case
-        when post_type.is_a?(Order::Line)
+        when post_type.is_a?(BL)
           add_order_line(post_type)
-        when post_type.is_a?(Order::Text)
+        when post_type.is_a?(BT)
           add_text_to_order_line(post_type)
         when post_type.is_a?(Hash)
-          add_order_line(EfoNelfo::V40::Order::Line.new(post_type))
+          add_order_line(EfoNelfo::V40::BL.new(post_type))
         end
       end
 
