@@ -14,6 +14,7 @@ require 'efo_nelfo/v40/order/order'
 require 'efo_nelfo/v40/order/line'
 require 'efo_nelfo/v40/order/text'
 require 'efo_nelfo/v40/product/product'
+require 'efo_nelfo/v40/product/line'
 
 # Reader modules (import)
 require 'efo_nelfo/reader/csv'

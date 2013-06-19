@@ -8,8 +8,6 @@ module EfoNelfo
         'PH' => 'Pristilbud Hodepost'
       }
 
-      attr_accessor :source
-
       property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
       property :format,                      alias: :Format,        limit: 8, default: 'EFONELFO'
       property :version,                     alias: :Versjon,       limit: 3, default: version
@@ -27,6 +25,11 @@ module EfoNelfo
       property :seller_zip,                  alias: :SPostNr,       limit: 9, required: true
       property :seller_office,               alias: :SPostSted,     limit: 35, required: true
       property :seller_country,              alias: :SLandK,        limit: 2
+
+
+      def add(post_type)
+        lines << post_type
+      end
 
     end
   end
