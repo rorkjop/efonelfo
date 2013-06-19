@@ -15,6 +15,8 @@ require 'efo_nelfo/v40/bl'
 require 'efo_nelfo/v40/bt'
 require 'efo_nelfo/v40/vh'
 require 'efo_nelfo/v40/vl'
+require 'efo_nelfo/v40/vx'
+require 'efo_nelfo/v40/va'
 
 # Reader modules (import)
 require 'efo_nelfo/reader/csv'
