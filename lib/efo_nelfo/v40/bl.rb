@@ -18,19 +18,11 @@ module EfoNelfo
       property :splitable,         alias: :DelLev,     type: :boolean, default: true
       property :replacable,        alias: :AltKode,    type: :boolean, default: true
 
-      attr_reader :text
+      has_many :text, post_type: "BT"
 
       # Returns an array with one or more elements
       def to_a
         [ super, text.to_a ].reject(&:empty?)
-      end
-
-      def text=(txt)
-        if txt.is_a? String
-          @text = EfoNelfo::V40::BT.new text: txt
-        else
-          @text = txt
-        end
       end
 
       def format_item_count

@@ -6,10 +6,13 @@ module EfoNelfo
     include Enumerable
     extend Forwardable
 
+    # attr_reader :owner
+
     def_delegators :@list, :[], :each, :<<, :last, :size, :empty?
 
     def initialize(*args)
-      @list = []
+      # @owner = args.first
+      @list  = []
     end
 
     def to_a

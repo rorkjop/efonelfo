@@ -21,6 +21,9 @@ module EfoNelfo
       property :sales_package,     alias: :SalgsPakning,  limit: 9,  type: :integer
       property :discount,          alias: :Rabatt,        limit: 4,  type: :integer
       property :price_type,        alias: :Pristype,      limit: 1
+
+      has_many :info, post_type: "VX"
+      has_many :alternatives, post_type: "VA"
     end
   end
 end

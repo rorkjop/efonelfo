@@ -2,6 +2,7 @@ module EfoNelfo
 
   class PostType
     include EfoNelfo::Property
+    include EfoNelfo::HasMany
 
     class << self
 
@@ -38,10 +39,6 @@ module EfoNelfo
 
     def version
       self.class.version
-    end
-
-    # This is for adding posttypes
-    def add(something)
     end
 
   end

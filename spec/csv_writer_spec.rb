@@ -21,7 +21,7 @@ describe EfoNelfo::V40::BH do
 
   describe "to_csv" do
     before do
-      order.add EfoNelfo::V40::BL.new(order_number: 'foo', item_name: 'Ware', item_count: 6, splitable: true)
+      order.add EfoNelfo::V40::BL.new order_number: 'foo', item_name: 'Ware', item_count: 6, splitable: true
       order.add EfoNelfo::V40::BT.new text: 'haha'
     end
 
@@ -36,7 +36,7 @@ describe EfoNelfo::V40::BH do
     it "can be parsed" do
       o = EfoNelfo.parse(csv)
       o.must_be_instance_of EfoNelfo::V40::BH
-      o.lines.first.text.must_be_instance_of EfoNelfo::V40::BT
+      o.lines.first.text.first.must_be_instance_of EfoNelfo::V40::BT
     end
 
     it "adds order lines" do

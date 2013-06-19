@@ -1,6 +1,5 @@
 module EfoNelfo
   module PostHeadType
-    attr_reader   :lines
     attr_accessor :source
 
     def self.included(base)
@@ -10,19 +9,17 @@ module EfoNelfo
     end
 
     def initialize(*args)
-      @lines = EfoNelfo::Array.new
       super
     end
 
-    def lines=(values)
-      @lines = EfoNelfo::Array.new
-      values.each do |item|
-        add item
-      end
-    end
-
     def add(post_type)
-      lines << post_type
+      if has_association? post_type
+        find_association(post_type) << post_type
+      else
+        if lines.any?
+          lines.last.find_association(post_type) << post_type
+        end
+      end
     end
 
     def to_a

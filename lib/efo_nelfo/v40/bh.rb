@@ -50,16 +50,18 @@ module EfoNelfo
       property :seller_office,               alias: :SPostSted,     limit: 35
       property :seller_country,              alias: :SLandK,        limit: 2
 
-      def add(post_type)
-        case
-        when post_type.is_a?(BL)
-          add_order_line(post_type)
-        when post_type.is_a?(BT)
-          add_text_to_order_line(post_type)
-        when post_type.is_a?(Hash)
-          add_order_line(EfoNelfo::V40::BL.new(post_type))
-        end
-      end
+      has_many :lines, post_type: "BL"
+
+      # def add(post_type)
+      #   case
+      #   when post_type.is_a?(BL)
+      #     add_order_line(post_type)
+      #   when post_type.is_a?(BT)
+      #     add_text_to_order_line(post_type)
+      #   when post_type.is_a?(Hash)
+      #     add_order_line(EfoNelfo::V40::BL.new(post_type))
+      #   end
+      # end
 
       private
 

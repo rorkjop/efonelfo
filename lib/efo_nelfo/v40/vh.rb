@@ -17,6 +17,8 @@ module EfoNelfo
       property :seller_office,      alias: :SPostSted,     limit: 35, required: true
       property :seller_country,     alias: :SLandK,        limit: 2
       property :price_type,         alias: :PrisType,      limit: 1
+
+      has_many :lines, post_type: 'VL'
     end
   end
 end
