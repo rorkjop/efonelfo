@@ -3,7 +3,7 @@ module EfoNelfo
     class BL < EfoNelfo::PostType
 
       # It's important to list the property in the same order as specified in the specs
-      property :post_type,         alias: :PostType,   limit: 2,   default: 'BL'
+      property :post_type,         alias: :PostType,   limit: 2,   default: post_type, required: true
       property :index,             alias: :LinjeNr,    limit: 4,   type: :integer
       property :order_number,      alias: :BestNr,     limit: 10,  required: true
       property :item_type,         alias: :VareMrk,    limit: 1,   required: true, type: :integer
