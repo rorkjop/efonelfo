@@ -147,7 +147,6 @@ describe EfoNelfo do
       it "the order contains order information" do
         order = EfoNelfo.load(csv('B650517.032.csv'))
         order.post_type.must_equal 'BH'
-        order.post_type_human.must_equal 'Bestilling Hodepost'
         order.format.must_equal 'EFONELFO'
         order.version.must_equal '4.0'
       end
@@ -159,7 +158,6 @@ describe EfoNelfo do
         line.must_be_instance_of EfoNelfo::V40::BL
 
         line.post_type.must_equal 'BL'
-        line.post_type_human.must_equal 'Bestilling vareLinjepost'
 
         line.index.must_equal 1
         line.order_number.must_equal '1465'
