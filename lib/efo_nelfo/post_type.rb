@@ -3,25 +3,17 @@ module EfoNelfo
   class PostType
     include EfoNelfo::Property
 
-    attr_reader :post_type
-
-    @modules = []
-
     class << self
-      def inherited(klass)
-        @modules << klass
+
+      def for(type, version)
+        klass = "EfoNelfo::V#{version_to_namespace(version)}::#{type}"
+        const_get(klass) rescue nil
       end
 
-      def for(type, version=nil)
-        @modules.select { |mod| mod.can_parse?(type, version) }.first
-      end
-
-      def can_parse?(post_type, check_version=nil)
-        if check_version
-          self::POST_TYPES.keys.include?(post_type) && check_version == version
-        else
-          self::POST_TYPES.keys.include?(post_type)
-        end
+      # Converts version to module version name
+      # Example: version_to_namespace("4.2")   # => "42"
+      def version_to_namespace(version)
+        version.to_s.gsub('.', '')
       end
 
       # Extracts version number from class namespace.
@@ -30,20 +22,26 @@ module EfoNelfo
         (self.to_s.match(/::V(?<version>\d+)::/)[:version].to_f / 10).to_s
       end
 
+      def post_type
+        name.split(/::/).last
+      end
+
     end
 
     def initialize(*args)
       initialize_attributes *args
-      @post_type = self.class::POST_TYPES.keys.first
-      @version   = self.class.version
+    end
+
+    def post_type
+      self.class.post_type
+    end
+
+    def version
+      self.class.version
     end
 
     # This is for adding posttypes
     def add(something)
-    end
-
-    def post_type_human
-      self.class::POST_TYPES[post_type]
     end
 
   end

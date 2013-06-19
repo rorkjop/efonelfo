@@ -1,17 +1,9 @@
 module EfoNelfo
   module V40
-    class Order < EfoNelfo::PostType
+    class BH < EfoNelfo::PostType
       include PostHeadType
 
-      POST_TYPES = {
-        'BH' => 'Bestilling Hodepost',
-        'IH' => 'Forespørsel Hodepost'
-      }
-
       # It's important to list the property in the same order as specified in the specs
-      property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
-      property :format,                      alias: :Format,        limit: 8, default: 'EFONELFO'
-      property :version,                     alias: :Versjon,       limit: 3, default: version
       property :seller_id,                   alias: :SelgersId,     limit: 14
       property :buyer_id,                    alias: :KjøpersId,     limit: 14, required: true
       property :order_number,                alias: :BestNr,        limit: 10, required: true
@@ -60,20 +52,12 @@ module EfoNelfo
 
       def add(post_type)
         case
-        when post_type.is_a?(Order::Line)
+        when post_type.is_a?(BL)
           add_order_line(post_type)
-        when post_type.is_a?(Order::Text)
+        when post_type.is_a?(BT)
           add_text_to_order_line(post_type)
         when post_type.is_a?(Hash)
-          add_order_line(EfoNelfo::V40::Order::Line.new(post_type))
-        end
-      end
-
-      def to_csv
-        CSV.generate EfoNelfo::Reader::CSV::CSV_OPTIONS do |csv|
-          to_a.each do |row|
-            csv << row unless row.empty?
-          end
+          add_order_line(EfoNelfo::V40::BL.new(post_type))
         end
       end
 

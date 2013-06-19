@@ -10,19 +10,19 @@ describe EfoNelfo do
 
   describe "properties" do
     it "is accessible as alias" do
-      order = EfoNelfo::V40::Order.new
+      order = EfoNelfo::V40::BH.new
       order.buyer_id = "123"
       order.KjøpersId.must_equal "123"
     end
 
     it "can update the variable using the alias" do
-      order = EfoNelfo::V40::Order.new
+      order = EfoNelfo::V40::BH.new
       order.KjøpersId = "foo"
       order.buyer_id.must_equal "foo"
     end
 
     it "has custom setters" do
-      EfoNelfo::V40::Order.new(delivery_date: "20110402").delivery_date.must_be_kind_of Date
+      EfoNelfo::V40::BH.new(delivery_date: "20110402").delivery_date.must_be_kind_of Date
     end
 
   end
@@ -39,10 +39,10 @@ describe EfoNelfo do
         ]
       }
     }
-    let(:order) { EfoNelfo::V40::Order.new json }
+    let(:order) { EfoNelfo::V40::BH.new json }
 
     it "creates an order" do
-      order.must_be_instance_of EfoNelfo::V40::Order
+      order.must_be_instance_of EfoNelfo::V40::BH
     end
 
     it "assigns attributes" do
@@ -59,7 +59,7 @@ describe EfoNelfo do
 
     it "adds text to order lines" do
       order.lines.first.text.must_be_nil
-      order.lines[1].text.must_be_instance_of EfoNelfo::V40::Order::Text
+      order.lines[1].text.must_be_instance_of EfoNelfo::V40::BT
       order.lines[1].text.to_s.must_equal "This is freetext"
     end
 
@@ -87,7 +87,7 @@ describe EfoNelfo do
     describe "passing a Product file" do
       let(:nelfo) { EfoNelfo.load(csv('varefil_eksempel.csv')) }
 
-      it { nelfo.must_be_instance_of EfoNelfo::V40::Product }
+      it { nelfo.must_be_instance_of EfoNelfo::V40::VH }
 
       it "loads the order" do
         nelfo.format.must_equal "EFONELFO"
@@ -141,13 +141,12 @@ describe EfoNelfo do
       end
 
       it "parses the file and returns an Order" do
-        EfoNelfo.load(csv('B650517.032.csv')).must_be_instance_of EfoNelfo::V40::Order
+        EfoNelfo.load(csv('B650517.032.csv')).must_be_instance_of EfoNelfo::V40::BH
       end
 
       it "the order contains order information" do
         order = EfoNelfo.load(csv('B650517.032.csv'))
         order.post_type.must_equal 'BH'
-        order.post_type_human.must_equal 'Bestilling Hodepost'
         order.format.must_equal 'EFONELFO'
         order.version.must_equal '4.0'
       end
@@ -156,10 +155,9 @@ describe EfoNelfo do
         order = EfoNelfo.load(csv('B650517.032.csv'))
 
         line = order.lines.first
-        line.must_be_instance_of EfoNelfo::V40::Order::Line
+        line.must_be_instance_of EfoNelfo::V40::BL
 
         line.post_type.must_equal 'BL'
-        line.post_type_human.must_equal 'Bestilling vareLinjepost'
 
         line.index.must_equal 1
         line.order_number.must_equal '1465'
@@ -193,7 +191,7 @@ describe EfoNelfo do
     # Loads all files in the samples directory
     %w(B028579.594.csv B028579.596.csv B650517.031.csv B028579.595.csv B028579.597.csv B650517.030.csv B650517.032.csv).each do |file|
       it "can load #{file}" do
-        EfoNelfo.load(csv(file)).must_be_instance_of EfoNelfo::V40::Order
+        EfoNelfo.load(csv(file)).must_be_instance_of EfoNelfo::V40::BH
       end
     end
 
