@@ -3,11 +3,6 @@ module EfoNelfo
     class BH < EfoNelfo::PostType
       include PostHeadType
 
-      POST_TYPES = {
-        'BH' => 'Bestilling Hodepost',
-        'IH' => 'Forespørsel Hodepost'
-      }
-
       # It's important to list the property in the same order as specified in the specs
       property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
       property :format,                      alias: :Format,        limit: 8, default: 'EFONELFO'

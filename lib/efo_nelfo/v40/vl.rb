@@ -1,11 +1,6 @@
 module EfoNelfo
   module V40
     class VL < EfoNelfo::PostType
-      POST_TYPES = {
-        'VL' => 'Vare Linjepost',
-        'PL' => 'Pristilbud Linjepost'
-      }
-
       property :post_type,         alias: :PostType,   limit: 2,   default: 'VL', required: true
       property :product_type,      alias: :VareMrk,    limit: 1,   type: :integer, required: true
       property :product_number,    alias: :VareNr,     limit: 14,  required: true

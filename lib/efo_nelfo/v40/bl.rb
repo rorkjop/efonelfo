@@ -1,10 +1,6 @@
 module EfoNelfo
   module V40
     class BL < EfoNelfo::PostType
-      POST_TYPES = {
-        'BL' => 'Bestilling vareLinjepost',
-        'IL' => 'Forespørsel vareLinjepost'
-      }
 
       # It's important to list the property in the same order as specified in the specs
       property :post_type,         alias: :PostType,   limit: 2,   default: 'BL'

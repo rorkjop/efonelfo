@@ -3,11 +3,6 @@ module EfoNelfo
     class VH < EfoNelfo::PostType
       include PostHeadType
 
-      POST_TYPES = {
-        'VH' => 'Vare Hodepost',
-        'PH' => 'Pristilbud Hodepost'
-      }
-
       property :post_type,                   alias: :PostType,      limit: 2, default: 'BH'
       property :format,                      alias: :Format,        limit: 8, default: 'EFONELFO'
       property :version,                     alias: :Versjon,       limit: 3, default: version

@@ -1,10 +1,6 @@
 module EfoNelfo
   module V40
     class BT < EfoNelfo::PostType
-      POST_TYPES = {
-        'BT' => 'Bestilling Fritekstlinje',
-        'IT' => 'Forespørsel Fritekstlinje'
-      }
 
       # It's important to list the property in the same order as specified in the specs
       property :post_type, alias: :PostType, limit: 2, default: 'BT'
