@@ -1,4 +1,3 @@
-# encoding: utf-8
 module EfoNelfo
   module V40
     class Order < EfoNelfo::PostType
