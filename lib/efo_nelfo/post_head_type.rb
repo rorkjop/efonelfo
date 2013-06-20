@@ -22,10 +22,6 @@ module EfoNelfo
       end
     end
 
-    def to_a
-      [ super ] + lines.to_a
-    end
-
     def to_csv
       CSV.generate EfoNelfo::Reader::CSV::CSV_OPTIONS do |csv|
         to_a.each do |row|

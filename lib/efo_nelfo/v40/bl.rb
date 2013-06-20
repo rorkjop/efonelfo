@@ -20,11 +20,6 @@ module EfoNelfo
 
       has_many :text, post_type: "BT"
 
-      # Returns an array with one or more elements
-      def to_a
-        [ super, text.to_a ].reject(&:empty?)
-      end
-
       def format_item_count
         item_count ? item_count * 100 : nil
       end

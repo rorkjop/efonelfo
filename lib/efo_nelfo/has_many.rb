@@ -14,13 +14,26 @@ module EfoNelfo
       !self.class.association(post_type).nil?
     end
 
+    def associations
+      self.class.associations
+    end
+
     def add(post)
       find_association(post) << post
     end
 
-    def initialize(*args)
-      super
-      @lines = EfoNelfo::Array.new self
+    def to_a
+      [ super ] + associations_array
+    end
+
+    protected
+
+    def associations_array
+      if associations
+        associations.keys.map { |name| find_association(name).to_a }.reject(&:empty?).flatten(1)
+      else
+        []
+      end
     end
 
     module ClassMethods
@@ -29,17 +42,20 @@ module EfoNelfo
         @associations ||= {}
         @associations[options[:post_type]] = name
 
-        attr_reader name
+        # attr_reader name
+
         define_method name do
           instance_variable_get("@#{name}") || instance_variable_set("@#{name}", EfoNelfo::Array.new(self))
         end
 
-        define_method(:foo) { |x = "Test"| x }
-
         define_method "#{name}=" do |values|
           instance_variable_set "@#{name}", EfoNelfo::Array.new(self)
-          values.each { |item| add item }
+          values.each { |item| add item } unless values.nil?
         end
+      end
+
+      def associations
+        @associations
       end
 
       def association(post_type)

@@ -30,7 +30,7 @@ describe EfoNelfo::V40::BH do
       csv.must_match /;4.0;/
       csv.must_match /;123;/
       csv.must_match /;600;/
-      csv.must_match /;J;/
+      csv.must_match /;J;/              # for fixing sublime syntax highlighting: /
     end
 
     it "can be parsed" do
@@ -45,7 +45,7 @@ describe EfoNelfo::V40::BH do
     end
 
     it "adds text to order line" do
-      csv.must_match /haha/
+      csv.must_match /BT;haha/
     end
 
   end
