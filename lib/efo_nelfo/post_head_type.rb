@@ -8,10 +8,6 @@ module EfoNelfo
       base.send :property, :version,    alias: :Versjon,       limit: 3, default: base.version
     end
 
-    def initialize(*args)
-      super
-    end
-
     def add(post_type)
       if has_association? post_type
         find_association(post_type) << post_type
