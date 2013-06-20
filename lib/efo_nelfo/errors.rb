@@ -1,5 +1,6 @@
 module EfoNelfo
-  class UnsupportedPostType   < StandardError; end
-  class DuplicateProperty     < StandardError; end
-  class UnknownPropertyOption < StandardError; end
+  InvalidPostType       = Class.new(StandardError)
+  UnsupportedPostType   = Class.new(StandardError)
+  DuplicateProperty     = Class.new(StandardError)
+  UnknownPropertyOption = Class.new(StandardError)
 end
