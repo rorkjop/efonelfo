@@ -36,6 +36,4 @@ module EfoNelfo
 
   end
 
-
 end
-
