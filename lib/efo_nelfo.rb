@@ -10,13 +10,9 @@ require 'efo_nelfo/post_type'
 require 'efo_nelfo/post_head_type'
 
 # EfoNelfo v4.0 modules
-require 'efo_nelfo/v40/bh'
-require 'efo_nelfo/v40/bl'
-require 'efo_nelfo/v40/bt'
-require 'efo_nelfo/v40/vh'
-require 'efo_nelfo/v40/vl'
-require 'efo_nelfo/v40/vx'
-require 'efo_nelfo/v40/va'
+Dir.glob(File.expand_path('../efo_nelfo/v40/*.rb', __FILE__)).each do |file|
+  require file
+end
 
 # Reader modules (import)
 require 'efo_nelfo/reader/csv'
