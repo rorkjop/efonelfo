@@ -39,19 +39,20 @@ module EfoNelfo
     module ClassMethods
 
       def has_many(name, options)
-        @associations ||= {}
-        @associations[options[:post_type]] = name
+        post_type = options[:post_type]
 
-        # attr_reader name
+        @associations ||= {}
+        @associations[post_type] = name
 
         define_method name do
-          instance_variable_get("@#{name}") || instance_variable_set("@#{name}", EfoNelfo::Array.new(self))
+          instance_variable_get("@#{name}") || instance_variable_set("@#{name}", EfoNelfo::Array.new(self, post_type))
         end
 
         define_method "#{name}=" do |values|
-          instance_variable_set "@#{name}", EfoNelfo::Array.new(self)
-          values.each { |item| add item } unless values.nil?
+          instance_variable_set "@#{name}", EfoNelfo::Array.new(self, post_type)
+          values.each { |item| instance_variable_get("@#{name}") << item } if values
         end
+
       end
 
       def associations
