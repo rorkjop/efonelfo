@@ -29,6 +29,10 @@ module EfoNelfo
         product_type == 4 ? product_number : nil
       end
 
+      def images
+        info.map(&:image).compact
+      end
+
     end
   end
 end
