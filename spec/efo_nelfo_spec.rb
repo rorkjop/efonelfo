@@ -35,7 +35,9 @@ describe EfoNelfo do
         label: "Some label",
         lines: [
           { post_type: 'BL', item_type: 1, order_number: "12345", item_name: "Foo", price_unit: "NOK" },
-          { post_type: 'BL', item_type: 1, order_number: "12345", item_name: "Bar", price_unit: "SEK" }
+          { post_type: 'BL', item_type: 1, order_number: "12345", item_name: "Bar", price_unit: "SEK", text: [
+            { post_type: 'BT', text: "some dummy lorem ipsum text" }
+          ] }
         ]
       }
     }
@@ -62,11 +64,11 @@ describe EfoNelfo do
       order.lines[1].index.must_equal 2
     end
 
-    # it "adds text to order lines" do
-    #   order.lines.first.text.must_be_nil
-    #   order.lines[1].text.first.must_be_instance_of EfoNelfo::V40::BT
-    #   order.lines[1].text.first.to_s.must_equal "This is freetext"
-    # end
+    it "adds text to order lines" do
+      order.lines.first.text.must_be_empty
+      order.lines[1].text.first.must_be_instance_of EfoNelfo::V40::BT
+      order.lines[1].text.first.to_s.must_equal "some dummy lorem ipsum text"
+    end
 
   end
 
