@@ -24,6 +24,11 @@ module EfoNelfo
 
       has_many :info, post_type: "VX"
       has_many :alternatives, post_type: "VA"
+
+      def nrf_id
+        product_type == 4 ? product_number : nil
+      end
+
     end
   end
 end
