@@ -14,23 +14,31 @@ module EfoNelfo
       # Converts version to module version name
       # Example: version_to_namespace("4.2")   # => "42"
       def version_to_namespace(version)
-        version.to_s.gsub('.', '')
+        version.gsub('.', '')
       end
 
       # Extracts version number from class namespace.
       # Example: EfoNelfo::V41::Some::Class.version  # => "4.1"
       def version
-        (self.to_s.match(/::V(?<version>\d+)::/)[:version].to_f / 10).to_s
+        (version_from_class.to_f / 10).to_s
+      end
+
+      def version_from_class
+        self.to_s.match(/::V(?<version>\d+)::/)[:version]
       end
 
       def post_type
         name.split(/::/).last
       end
 
+      def from(hash)
+        self.for(hash[:post_type], hash[:version]).new(hash)
+      end
+
     end
 
     def initialize(*args)
-      initialize_attributes *args
+      initialize_attributes(*args)
     end
 
     def post_type
