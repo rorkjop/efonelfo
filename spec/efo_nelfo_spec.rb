@@ -50,12 +50,17 @@ describe EfoNelfo do
       order.seller_warehouse.must_equal "Somewhere"
     end
 
-    # it "assigns order lines" do
-    #   order.lines.size.must_equal 2
-    #   order.lines[0].index.must_equal 1
-    #   order.lines[1].index.must_equal 2
-    #   order.lines[1].item_name.must_equal "Bar"
-    # end
+    it "assigns order lines" do
+      order.lines.size.must_equal 2
+      order.lines.first.must_be_instance_of EfoNelfo::V40::BL
+      order.lines[0].item_name.must_equal "Foo"
+      order.lines[1].item_name.must_equal "Bar"
+    end
+
+    it "adds index to the line items" do
+      order.lines[0].index.must_equal 1
+      order.lines[1].index.must_equal 2
+    end
 
     # it "adds text to order lines" do
     #   order.lines.first.text.must_be_nil

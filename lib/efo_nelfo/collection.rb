@@ -18,20 +18,25 @@ module EfoNelfo
 
     def <<(obj)
       obj = post_type_class.new(obj) if obj.is_a? Hash
-      raise EfoNelfo::InvalidPostType if obj.is_a?(EfoNelfo::PostType) && obj.post_type != post_type
-      @list << obj if obj
-    end
+      raise EfoNelfo::InvalidPostType if obj.nil? || (obj.is_a?(EfoNelfo::PostType) && obj.post_type != post_type)
 
-    def post_type_class
-      Kernel.const_get("EfoNelfo::V#{owner.class.version_from_class}::#{post_type}")
+      # Set the index if the post has an index property
+      obj.index = size + 1 if obj.has_property?(:index)
+
+      @list << obj
     end
 
     def to_a
       map(&:to_a).flatten(1)
     end
 
-    protected
+    private
     attr_reader :list
+
+    def post_type_class
+      Kernel.const_get("EfoNelfo::V#{owner.class.version_from_class}::#{post_type}")
+    end
+
 
   end
 
