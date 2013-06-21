@@ -1,10 +1,17 @@
 module EfoNelfo
 
   module Property
-    include EfoNelfo::AttributeAssignment
 
     def self.included(base)
       base.send :extend, ClassMethods
+    end
+
+    def initialize_attributes(*args)
+      if args && args.first.is_a?(Hash)
+        args.first.each do |attr, value|
+          send "#{attr}=", value
+        end
+      end
     end
 
     def attributes
@@ -13,6 +20,10 @@ module EfoNelfo
 
     def properties
       self.class.properties
+    end
+
+    def has_property?(property)
+      properties.include? property
     end
 
     def to_a
@@ -76,12 +87,18 @@ module EfoNelfo
       #   - alias     Norwegian alias name for the attribute
       #
       def property(name, options={})
+
         options = {
           type: :string,
           required: false,
         }.update options
 
         name = name.to_sym
+
+        # ensure all options are valid
+        valid_options   = [:type, :required, :limit, :read_only, :alias, :default]
+        invalid_options = options.keys - valid_options
+        raise EfoNelfo::UnknownPropertyOption.new("Invalid option for #{name}: #{invalid_options.join(',')}") if invalid_options.any?
 
         # Store property info in @properties
         raise EfoNelfo::DuplicateProperty if properties.has_key?(name)

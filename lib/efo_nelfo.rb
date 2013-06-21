@@ -3,15 +3,20 @@
 # Common stuff
 require 'efo_nelfo/version'
 require 'efo_nelfo/errors'
-require 'efo_nelfo/array'
-require 'efo_nelfo/attribute_assignment'
 require 'efo_nelfo/property'
+require 'efo_nelfo/collection'
+require 'efo_nelfo/has_many'
 require 'efo_nelfo/post_type'
+require 'efo_nelfo/post_head_type'
 
 # EfoNelfo v4.0 modules
-require 'efo_nelfo/v40/order/order'
-require 'efo_nelfo/v40/order/line'
-require 'efo_nelfo/v40/order/text'
+require 'efo_nelfo/v40/bh'
+require 'efo_nelfo/v40/bl'
+require 'efo_nelfo/v40/bt'
+require 'efo_nelfo/v40/vh'
+require 'efo_nelfo/v40/vl'
+require 'efo_nelfo/v40/vx'
+require 'efo_nelfo/v40/va'
 
 # Reader modules (import)
 require 'efo_nelfo/reader/csv'
@@ -30,6 +35,4 @@ module EfoNelfo
 
   end
 
-
 end
-
