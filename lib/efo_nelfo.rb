@@ -3,7 +3,6 @@
 # Common stuff
 require 'efo_nelfo/version'
 require 'efo_nelfo/errors'
-require 'efo_nelfo/attribute_assignment'
 require 'efo_nelfo/property'
 require 'efo_nelfo/collection'
 require 'efo_nelfo/has_many'

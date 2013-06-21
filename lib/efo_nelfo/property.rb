@@ -1,10 +1,17 @@
 module EfoNelfo
 
   module Property
-    include EfoNelfo::AttributeAssignment
 
     def self.included(base)
       base.send :extend, ClassMethods
+    end
+
+    def initialize_attributes(*args)
+      if args && args.first.is_a?(Hash)
+        args.first.each do |attr, value|
+          send "#{attr}=", value
+        end
+      end
     end
 
     def attributes
