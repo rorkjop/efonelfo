@@ -127,6 +127,11 @@ describe EfoNelfo::Property do
     end
   end
 
+  it "#has_property? returns true when property exists" do
+    obj.has_property?(:foo).must_equal true
+    obj.has_property?(:bullshit).must_equal false
+  end
+
   describe "#to_a" do
     it "returns array of all attributes in correct order" do
       obj.date = Date.new 2012, 5, 30

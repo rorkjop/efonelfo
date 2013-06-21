@@ -22,6 +22,10 @@ module EfoNelfo
       self.class.properties
     end
 
+    def has_property?(property)
+      properties.include? property
+    end
+
     def to_a
       properties.keys.map { |prop| formatted_for_csv(prop) }
     end
