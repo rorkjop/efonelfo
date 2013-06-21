@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EfoNelfo::Array do
+describe EfoNelfo::Collection do
   Owner = Class.new do
     def self.version_from_class
       '21'
@@ -8,7 +8,7 @@ describe EfoNelfo::Array do
   end
 
   let(:owner) { Owner.new }
-  let(:array) { EfoNelfo::Array.new owner, "BT" }
+  let(:array) { EfoNelfo::Collection.new owner, "BT" }
 
   it "accepts owner and post_type arguments" do
     array.owner.must_equal owner

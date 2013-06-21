@@ -2,7 +2,7 @@ require 'forwardable'
 
 module EfoNelfo
 
-  class Array
+  class Collection
     include Enumerable
     extend Forwardable
 

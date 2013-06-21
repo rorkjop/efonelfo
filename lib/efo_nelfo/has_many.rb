@@ -45,11 +45,11 @@ module EfoNelfo
         @associations[post_type] = name
 
         define_method name do
-          instance_variable_get("@#{name}") || instance_variable_set("@#{name}", EfoNelfo::Array.new(self, post_type))
+          instance_variable_get("@#{name}") || instance_variable_set("@#{name}", EfoNelfo::Collection.new(self, post_type))
         end
 
         define_method "#{name}=" do |values|
-          instance_variable_set "@#{name}", EfoNelfo::Array.new(self, post_type)
+          instance_variable_set "@#{name}", EfoNelfo::Collection.new(self, post_type)
           values.each { |item| instance_variable_get("@#{name}") << item } if values
         end
 
