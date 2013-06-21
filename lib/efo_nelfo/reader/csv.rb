@@ -33,7 +33,7 @@ module EfoNelfo
         # Read rest of the file and add them to the head
         csv.each do |row|
           # Find the correct posttype module for given posttype and version
-          klass = EfoNelfo::PostType.for row[0]
+          klass = EfoNelfo::PostType.for row[0], head.version
           next if klass.nil?
 
           line = initialize_object_with_properties klass, row

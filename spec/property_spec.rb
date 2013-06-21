@@ -25,6 +25,15 @@ describe EfoNelfo::Property do
     }.must_raise EfoNelfo::DuplicateProperty
   end
 
+  it "raises an error if trying to assign an unsupported option" do
+    lambda {
+      class Bar
+        include EfoNelfo::Property
+        property :lame, funny: true
+      end
+    }.must_raise EfoNelfo::UnknownPropertyOption
+  end
+
   it "adds a getter and setter for foo" do
     obj.foo = 'Test'
     obj.foo.must_equal 'Test'
@@ -116,6 +125,11 @@ describe EfoNelfo::Property do
     it "includes the property options" do
       props[:foo][:limit].must_equal 3
     end
+  end
+
+  it "#has_property? returns true when property exists" do
+    obj.has_property?(:foo).must_equal true
+    obj.has_property?(:bullshit).must_equal false
   end
 
   describe "#to_a" do
