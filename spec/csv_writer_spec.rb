@@ -29,7 +29,7 @@ describe EfoNelfo::V40::BH do
       csv.must_match /;EFONELFO;/
       csv.must_match /;4.0;/
       csv.must_match /;123;/
-      csv.must_match /;600;/
+      csv.must_match /;456;/
       csv.must_match /;J;/              # for fixing sublime syntax highlighting: /
     end
 

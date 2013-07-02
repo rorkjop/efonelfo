@@ -2,14 +2,15 @@
 
 Gem for parsing and writing EfoNelfo documents.
 
-Supported versions:
+Supported EfoNelfo versions:
 
 * 4.0
 
 Supported formats:
 
-* Bestilling
-
+* Bestilling (BH, BL, BT)
+* Vareformat (VH, VL, VX, VA)
+* Rabatt (RH, RL)
 
 ## Usage
 
@@ -19,8 +20,8 @@ Importing a CSV file:
 
 Exporting CSV:
 
-    # order = EfoNelfo::V40::Order.new
-    # order.add EfoNelfo::V40::Order::Line.new item_number: '442', order_number: 'abc'
+    # order = EfoNelfo::V40::VH.new
+    # order.add EfoNelfo::V40::VL.new item_number: '442', order_number: 'abc'
     # order.to_csv
 
 
@@ -30,7 +31,6 @@ Exporting CSV:
 * Support more filetypes
 * Support more versions
 * Support XML
-
 
 ## Resources
 

@@ -1,144 +1,193 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe EfoNelfo::Property do
+  subject { EfoNelfo::Property.new :foo, options }
+  let(:options) { nil }
 
-  class Foo
-    include EfoNelfo::Property
-    property :foo, alias: "Føbar", limit: 3, default: 'I am foo'
-    property :bar
-    property :date, type: :date
-    property :number, type: :integer
-    property :doable, type: :boolean, default: false
-    property :immutable, read_only: true, default: 'NO'
+  describe "initializing with options" do
+    let(:options) { { type: :integer, limit: 15, decimals: 4, default: 5, required: true } }
+
+    it { subject.name.must_equal :foo }
+    it { subject.default.must_equal 5 }
+    it { subject.limit.must_equal 15 }
+    it { subject.type.must_equal :integer }
+    it { subject.required.must_equal true }
+    it { subject.decimals.must_equal 4 }
+    it { subject.value.must_equal 5 }
+
+    it "raises an error when assigning to unknown type" do
+      lambda {
+        EfoNelfo::Property.new :name, type: :get_lost
+      }.must_raise EfoNelfo::InvalidPropertyType
+    end
   end
 
-  let(:obj) { Foo.new }
+  describe "initializing without options" do
+    let(:options) { nil }
 
-  it "raises an error if trying to add duplicate property" do
-    lambda {
-      class Bar
-        include EfoNelfo::Property
-        property :foo
-        property :foo
-      end
-    }.must_raise EfoNelfo::DuplicateProperty
+    it { subject.name.must_equal :foo }
+    it { subject.default.must_be_nil }
+    it { subject.limit.must_equal 100 }
+    it { subject.type.must_equal :string }
+    it { subject.required.must_equal false }
+    it { subject.decimals.must_be_nil }
+    it { subject.value.must_be_nil }
   end
 
-  it "raises an error if trying to assign an unsupported option" do
-    lambda {
-      class Bar
-        include EfoNelfo::Property
-        property :lame, funny: true
+  describe "setter" do
+    let(:property) { EfoNelfo::Property.new :name, type: type }
+
+    describe "when type is string" do
+      let(:type) { :string }
+      it "is just a string" do
+        property.value = 'New value'
+        property.value.must_equal 'New value'
       end
+    end
+
+    describe "when type is boolean" do
+      let(:type) { :boolean }
+
+      it "accepts boolean" do
+        property.value = true
+        property.value.must_equal true
+
+        property.value = false
+        property.value.must_equal false
+      end
+
+      it "accepts J/N" do
+        property.value = 'J'
+        property.value.must_equal true
+
+        property.value = 'j'
+        property.value.must_equal true
+
+        property.value = 'N'
+        property.value.must_equal false
+      end
+    end
+
+    describe "when type is date" do
+      let(:type) { :date }
+
+      it "accepts a Date" do
+        property.value = Date.new(2013, 11, 21)
+        property.value.must_equal Date.new(2013, 11, 21)
+      end
+
+      it "accepts a string" do
+        property.value = "20131121"
+        property.value.must_equal Date.new(2013, 11, 21)
+      end
+
+      it "invalid dates becomes nil" do
+        property.value = 'invalid date'
+        property.value.must_be_nil
+      end
+
+    end
+
+    describe "when type is integer" do
+      let(:type) { :integer }
+
+      it "accepts a number" do
+        property.value = '2'
+        property.value.must_equal 2
+      end
+
+      it "floats are rounded" do
+        property.value = 200.5
+        property.value.must_equal 200
+      end
+
+      it "nil becomes nil" do
+        property.value = nil
+        property.value.must_be_nil
+      end
+
+    end
+
+  end
+
+  it "#value= is ignored if the property is readonly" do
+    prop = EfoNelfo::Property.new(:name, read_only: true, default: 'untouchable')
+    prop.value = 'hey'
+    prop.value.must_equal 'untouchable'
+  end
+
+  it "#value= converts booleans to proper value" do
+    prop = EfoNelfo::Property.new(:name, type: :boolean)
+    prop.value = 'J'
+    prop.value.must_equal true
+
+    prop.value = 'N'
+    prop.value.must_equal false
+  end
+
+  it "#to_f returns the value with decimals" do
+    prop = EfoNelfo::Property.new(:name, decimals: 4)
+    prop.value = 4000
+    prop.to_f.must_equal 0.4
+  end
+
+  it "#to_f doesn't fail when decimals is nil" do
+    subject.value = "100"
+    subject.to_f.must_equal 100.0
+  end
+
+  it "#to_f returns nil when value is NaN" do
+    subject.value = nil
+    subject.to_f.must_be_nil
+  end
+
+  describe "#to_csv" do
+    def make_property(value, options={})
+      p = EfoNelfo::Property.new :name, options.merge(type: type)
+      p.value = value
+      p.to_csv
+    end
+
+    describe "type is :string" do
+      let(:type) { :string }
+      it { make_property("A string").must_equal "A string" }
+      it { make_property(nil).must_equal nil }
+      it { make_property("Sjøhest").encoding.must_equal Encoding::ISO_8859_1 }
+    end
+
+    describe "type is :integer" do
+      let(:type) { :integer }
+      it { make_property(2).must_equal 2 }
+      it { make_property(100, type: :integer, decimals: 4).must_equal 100 }
+      it { make_property(nil, type: :integer, decimals: 2).must_equal nil }
+    end
+
+    describe "type is :boolean" do
+      let(:type) { :boolean }
+      it { make_property(true).must_equal 'J' }
+      it { make_property(false).must_equal 'N' }
+      it { make_property(nil).must_equal 'J' }
+    end
+
+    describe "type is :date" do
+      let(:type) { :date }
+      it { make_property(Date.new(2013, 11, 21)).must_equal '20131121' }
+      it { make_property("20131121").must_equal "20131121" }
+      it { make_property("not a date").must_be_nil }
+      it { make_property(nil).must_be_nil }
+    end
+
+  end
+
+  it "raises error when initializing with unknown make_property" do
+    lambda {
+      EfoNelfo::Property.new :name, { foo: 'illegal' }
     }.must_raise EfoNelfo::UnknownPropertyOption
   end
 
-  it "adds a getter and setter for foo" do
-    obj.foo = 'Test'
-    obj.foo.must_equal 'Test'
+  it ".validate_options! raises error when passing invalid options" do
+    lambda {
+      EfoNelfo::Property.validate_options! foo: 'bar'
+    }.must_raise EfoNelfo::UnknownPropertyOption
   end
-
-  it "won't do any encoding conversions" do
-    obj.foo = 'Sjøhest'
-    obj.foo.encoding.name.must_equal 'UTF-8'
-  end
-
-  it "adds an alias getter and setter for foo" do
-    obj.foo = 'Test'
-    obj.Føbar.must_equal 'Test'
-    obj.Føbar = 'Hacked'
-    obj.Føbar.must_equal 'Hacked'
-    obj.foo.must_equal 'Hacked'
-  end
-
-  it "assigns default values" do
-    obj.bar.must_be_nil
-    obj.foo.must_equal 'I am foo'
-  end
-
-  it "can be assigned nil values" do
-    obj.number = nil
-    obj.number.must_be_nil
-  end
-
-  it "readonly attributes cannot be changed" do
-    lambda { obj.immutable = 'test' }.must_raise NoMethodError
-    obj.immutable.must_equal 'NO'
-  end
-
-  describe "property types" do
-    describe ":date" do
-      it "converts strings to dates" do
-        obj.date = "20100504"
-        obj.date.must_be_kind_of Date
-      end
-
-      it "accepts a Date" do
-        obj.date = Date.new 2010, 5, 4
-        obj.date.must_be_kind_of Date
-      end
-
-    end
-
-    it "handles :integer" do
-      obj.number = "2"
-      obj.number.must_equal 2
-    end
-
-    describe ":boolean" do
-      it "returns true when assigning blank string" do
-        obj.doable = ''
-        obj.doable?.must_equal true
-      end
-
-      it "returns true when assigning nil" do
-        obj.doable = nil
-        obj.doable?.must_equal true
-      end
-
-      it "returns true when assigning 'J'" do
-        obj.doable = 'J'
-        obj.doable?.must_equal true
-      end
-
-      it "returns false" do
-        obj.doable = false
-        obj.doable?.must_equal false
-
-        obj.doable = 'N'
-        obj.doable?.must_equal false
-      end
-
-    end
-
-
-  end
-
-  describe ".properties" do
-    let(:props) { Foo.properties }
-
-    it "includes the properties" do
-      props[:foo].must_be_kind_of Hash
-    end
-
-    it "includes the property options" do
-      props[:foo][:limit].must_equal 3
-    end
-  end
-
-  it "#has_property? returns true when property exists" do
-    obj.has_property?(:foo).must_equal true
-    obj.has_property?(:bullshit).must_equal false
-  end
-
-  describe "#to_a" do
-    it "returns array of all attributes in correct order" do
-      obj.date = Date.new 2012, 5, 30
-      obj.number = 3
-      obj.doable = true
-      obj.to_a.must_equal ["I am foo", nil, "20120530", 3, "J", "NO"]
-    end
-  end
-
 end

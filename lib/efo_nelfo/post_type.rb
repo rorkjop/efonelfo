@@ -1,7 +1,7 @@
 module EfoNelfo
 
   class PostType
-    include EfoNelfo::Property
+    include EfoNelfo::Properties
     include EfoNelfo::HasMany
 
     class << self
@@ -47,6 +47,14 @@ module EfoNelfo
 
     def version
       self.class.version
+    end
+
+    def to_csv
+      CSV.generate EfoNelfo::Reader::CSV::CSV_OPTIONS do |csv|
+        to_a.each do |row|
+          csv << row unless row.empty?
+        end
+      end
     end
 
   end
