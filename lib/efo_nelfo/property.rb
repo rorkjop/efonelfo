@@ -1,155 +1,94 @@
+using EfoNelfo::PropertyTypes
+
 module EfoNelfo
 
-  module Property
+  class Property
+    VALID_OPTIONS = [:type, :required, :limit, :read_only, :default, :decimals]
+    VALID_TYPES   = [:string, :integer, :boolean, :date]
 
-    def self.included(base)
-      base.send :extend, ClassMethods
+    attr_reader :name, :options, :value
+
+    def self.validate_options!(options)
+      invalid_options = options.keys - VALID_OPTIONS
+      raise EfoNelfo::UnknownPropertyOption.new("Invalid options: #{invalid_options.join(',')}") if invalid_options.any?
+      raise EfoNelfo::InvalidPropertyType.new("Valid types are #{VALID_TYPES.join(',')}") unless VALID_TYPES.include?(options[:type])
     end
 
-    def initialize_attributes(*args)
-      if args && args.first.is_a?(Hash)
-        args.first.each do |attr, value|
-          send "#{attr}=", value
-        end
-      end
+    def initialize(name, defaults={})
+
+      options = {
+        type:      :string,
+        required:  false,
+        default:   nil,
+        read_only: false,
+        decimals:  nil,
+        limit:     100
+      }
+      options.update(defaults) if defaults.is_a?(Hash)
+
+      self.class.validate_options! options
+
+      @name      = name
+      @options   = options
+      @value     = options[:default]
     end
 
-    def attributes
-      @attributes ||= initialize_default_attributes
-    end
+    # Assign a value to the property
+    # The value is converted to whatever specified by options[:type]
+    # Examples:
+    #   (boolean) value = 'J'         # => true
+    #   (boolean) value = false       # => false
+    #   (date)    value = '20120101'  # => Date.new(2012,1,1)
+    #   (integer) value = '2'         # => 2
+    #   (string)  value = 'foo'       # => 'foo'
+    def value=(new_value)
+      return nil if readonly?
 
-    def properties
-      self.class.properties
-    end
-
-    def has_property?(property)
-      properties.include? property
-    end
-
-    def to_a
-      properties.keys.map { |prop| formatted_for_csv(prop) }
-    end
-
-    private
-
-    def initialize_default_attributes
-      properties.inject({}) { |h,(name,options)| h[name] = options[:default]; h }
-    end
-
-    def format_value(value, type)
-      case type
-      when :integer
-        value.nil? ? nil : value.to_i
-      when :date
-        if value.nil?
-          nil
-        elsif value.kind_of? String
-          Date.parse value
+      @value = case
+        when boolean?
+          new_value.nil? || new_value == true || new_value == 'J' || new_value == 'j' || new_value == '' ? true : false
+        when date?
+          new_value.is_a?(Date) ? new_value : Date.parse(new_value) rescue nil
+        when integer?
+          new_value.nil? ? nil : new_value.to_i
         else
-          value
-        end
-      when :boolean
-        value.nil? || value == true || value == 'J' || value == '' ? true : false
-      else
-        value
+          new_value
       end
     end
 
-    # Format value for given attribute
-    def formatted_for_csv(attr)
-
-      if respond_to?("format_#{attr}")
-        value = send "format_#{attr}"
-      else
-        value = send attr
-
-        type  = properties[attr][:type]
-
-        value = case type
-        when :date
-          value ? value.strftime("%Y%m%d") : nil
-        when :boolean
-          value == true ? "J" : nil
-        else
-          value
-        end
-      end
-      value.respond_to?(:encode) ? value.encode(Encoding::ISO_8859_1) : value
+    # returns formatted value suitable for csv output
+    def to_csv
+      output = value.to_csv
     end
 
-    module ClassMethods
-      # Creates an attribute with given name.
-      #
-      # Options
-      #   - type      String, Integer etc. Default is String
-      #   - required  whether attribute is required. Default is false
-      #   - limit     Length the attribute can be. Default is nil
-      #   - alias     Norwegian alias name for the attribute
-      #
-      def property(name, options={})
+    # Returns integer to floating point based on specified decimals
+    # Example:
+    #   If decimal is set to 4, and the value is 4000
+    #   then to_f returns 0.4
+    def to_f
+      return nil if value.nil?
+      value.to_f.with_decimals decimals
+    end
+    alias :to_decimal :to_f
 
-        options = {
-          type: :string,
-          required: false,
-        }.update options
+    # Returns true if the property is read only
+    def readonly?
+      options[:read_only]
+    end
 
-        name = name.to_sym
+    # Returns true if the property is required
+    # Note: this is not in use yet
+    def required?
+      options[:required]
+    end
 
-        # ensure all options are valid
-        valid_options   = [:type, :required, :limit, :read_only, :alias, :default]
-        invalid_options = options.keys - valid_options
-        raise EfoNelfo::UnknownPropertyOption.new("Invalid option for #{name}: #{invalid_options.join(',')}") if invalid_options.any?
+    def boolean?; type == :boolean; end
+    def date?;    type == :date;    end
+    def integer?; type == :integer; end
+    def string?;  type == :string;  end
 
-        # Store property info in @properties
-        raise EfoNelfo::DuplicateProperty if properties.has_key?(name)
-        properties[name] = options
-
-        create_reader_for(name, options)
-        create_setter_for(name, options) unless options[:read_only]
-        create_question_for(name)        if options[:type] == :boolean
-        create_alias_for(name, options)  if options[:alias]
-      end
-
-      # Returns all properties
-      def properties
-        @_properties ||= {}
-      end
-
-      private
-
-      # Creates an attribute accessor for name
-      def create_reader_for(name, options)
-        define_method name do
-          attributes[name]
-        end
-      end
-
-      # Creates an attribute setter for name
-      def create_setter_for(name, options)
-        define_method "#{name}=" do |value|
-          attributes[name] = format_value(value, options[:type])
-        end
-      end
-
-      # Creates a name? accessor
-      def create_question_for(name)
-        define_method "#{name}?" do
-          attributes[name] == true
-        end
-      end
-
-      def create_alias_for(name, options)
-        define_method(options[:alias]) do
-          send name
-        end
-
-        unless options[:read_only]
-          define_method("#{options[:alias]}=") do |val|
-            send "#{name}=", val
-          end
-        end
-      end
-
+    def method_missing(*args)
+      options.has_key?(args.first) ? options[args.first] : super
     end
 
   end

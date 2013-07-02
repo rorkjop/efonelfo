@@ -1,7 +1,7 @@
 module EfoNelfo
 
   class PostType
-    include EfoNelfo::Property
+    include EfoNelfo::Properties
     include EfoNelfo::HasMany
 
     class << self
