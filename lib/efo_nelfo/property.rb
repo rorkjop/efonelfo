@@ -1,12 +1,14 @@
 module EfoNelfo
   class Property
     VALID_OPTIONS = [:type, :required, :limit, :read_only, :default, :decimals]
+    VALID_TYPES   = [:string, :integer, :boolean, :date]
 
     attr_reader :name, :options, :value
 
     def self.validate_options!(options)
       invalid_options = options.keys - VALID_OPTIONS
       raise EfoNelfo::UnknownPropertyOption.new("Invalid options: #{invalid_options.join(',')}") if invalid_options.any?
+      raise EfoNelfo::InvalidPropertyType.new("Valid types are #{VALID_TYPES.join(',')}") unless VALID_TYPES.include?(options[:type])
     end
 
     def initialize(name, defaults={})

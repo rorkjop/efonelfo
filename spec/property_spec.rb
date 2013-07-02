@@ -14,6 +14,12 @@ describe EfoNelfo::Property do
     it { subject.required.must_equal true }
     it { subject.decimals.must_equal 4 }
     it { subject.value.must_equal 5 }
+
+    it "raises an error when assigning to unknown type" do
+      lambda {
+        EfoNelfo::Property.new :name, type: :get_lost
+      }.must_raise EfoNelfo::InvalidPropertyType
+    end
   end
 
   describe "initializing without options" do
