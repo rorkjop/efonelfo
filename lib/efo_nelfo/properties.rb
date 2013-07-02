@@ -14,24 +14,29 @@ module EfoNelfo
       end
     end
 
-    def attributes
-      @attributes ||= initialize_properties
+    # Returns all properties
+    def properties
+      @properties ||= initialize_properties
     end
-    alias :properties :attributes
+    alias :attributes :properties
 
-    def has_property?(property)
-      properties.include? property
+    # Returns true if the given property exists
+    def has_property?(name)
+      properties.include? name
     end
 
+    # Returns all property values as array formatted for csv
     def to_a
-      # properties.keys.map { |prop| formatted_for_csv(prop) }
       properties.values.map &:to_csv
     end
 
     private
 
     def initialize_properties
-      self.class.properties.inject({}) { |h,(name,options)| h[name] = EfoNelfo::Property.new(name, options); h }
+      self.class.properties.inject({}) do |hash,(name,options)|
+        hash[name] = EfoNelfo::Property.new(name, options)
+        hash
+      end
     end
 
     module ClassMethods
@@ -44,7 +49,6 @@ module EfoNelfo
       #   - alias     Norwegian alias name for the attribute
       #
       def property(name, options={})
-
         options = {
           type: :string,
           required: false,
@@ -68,7 +72,7 @@ module EfoNelfo
         properties[name] = options
       end
 
-      # Returns all properties
+      # Returns all properties defined for the class
       def properties
         @_properties ||= {}
       end
@@ -97,7 +101,7 @@ module EfoNelfo
         end
       end
 
-      # Create an alias method for the property
+      # Create an alias getter/setter for the property
       def create_alias_for(name, alias_name, options)
         define_method(alias_name) do
           send name

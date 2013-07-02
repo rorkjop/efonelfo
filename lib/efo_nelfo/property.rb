@@ -33,6 +33,14 @@ module EfoNelfo
       @value     = options[:default]
     end
 
+    # Assign a value to the property
+    # The value is converted to whatever specified by options[:type]
+    # Examples:
+    #   (boolean) value = 'J'         # => true
+    #   (boolean) value = false       # => false
+    #   (date)    value = '20120101'  # => Date.new(2012,1,1)
+    #   (integer) value = '2'         # => 2
+    #   (string)  value = 'foo'       # => 'foo'
     def value=(new_value)
       return nil if readonly?
 
@@ -53,15 +61,23 @@ module EfoNelfo
       output = value.to_csv
     end
 
+    # Returns integer to floating point based on specified decimals
+    # Example:
+    #   If decimal is set to 4, and the value is 4000
+    #   then to_f returns 0.4
     def to_f
       return nil if value.nil?
       value.to_f.with_decimals decimals
     end
+    alias :to_decimal :to_f
 
+    # Returns true if the property is read only
     def readonly?
       options[:read_only]
     end
 
+    # Returns true if the property is required
+    # Note: this is not in use yet
     def required?
       options[:required]
     end

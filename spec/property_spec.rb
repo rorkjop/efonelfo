@@ -127,8 +127,8 @@ describe EfoNelfo::Property do
 
   it "#to_f returns the value with decimals" do
     prop = EfoNelfo::Property.new(:name, decimals: 4)
-    prop.value = 1000
-    prop.to_f.must_equal 0.1
+    prop.value = 4000
+    prop.to_f.must_equal 0.4
   end
 
   it "#to_f doesn't fail when decimals is nil" do
