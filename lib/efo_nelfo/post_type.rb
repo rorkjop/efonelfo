@@ -49,6 +49,14 @@ module EfoNelfo
       self.class.version
     end
 
+    def to_csv
+      CSV.generate EfoNelfo::Reader::CSV::CSV_OPTIONS do |csv|
+        to_a.each do |row|
+          csv << row unless row.empty?
+        end
+      end
+    end
+
   end
 
 end
