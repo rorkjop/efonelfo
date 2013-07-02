@@ -34,9 +34,19 @@ describe EfoNelfo::Properties do
     }.must_raise EfoNelfo::UnknownPropertyOption
   end
 
-  it "adds a getter and setter for foo" do
+  it "adds a getter method for :foo" do
+    obj.foo.must_equal 'I am foo'
+  end
+
+  it "adds a setter method for :foo" do
     obj.foo = 'Test'
     obj.foo.must_equal 'Test'
+  end
+
+  it "adds a question method for boolean types" do
+    obj.doable?.must_equal false
+    obj.doable = true
+    obj.doable?.must_equal true
   end
 
   it "won't do any encoding conversions" do
@@ -114,16 +124,12 @@ describe EfoNelfo::Properties do
 
   end
 
-  describe ".properties" do
-    let(:props) { Foo.properties }
+  it ".properties contains hash of options" do
+    Foo.properties[:foo].must_be_kind_of Hash
+  end
 
-    it "includes the properties" do
-      props[:foo].must_be_kind_of Hash
-    end
-
-    it "includes the property options" do
-      props[:foo][:limit].must_equal 3
-    end
+  it "#properties contains hash of EfoNelfo::Property objects" do
+    Foo.new.properties[:foo].must_be_kind_of EfoNelfo::Property
   end
 
   it "#has_property? returns true when property exists" do
@@ -138,12 +144,6 @@ describe EfoNelfo::Properties do
       obj.doable = true
       obj.to_a.must_equal ["I am foo", nil, "20120530", 3, "J", "NO"]
     end
-  end
-
-  describe "#to_f" do
-    # it "converts the value with correct decimals" do
-    #   props[:foo]
-    # end
   end
 
 end

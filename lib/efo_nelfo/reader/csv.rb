@@ -4,6 +4,8 @@ module EfoNelfo
   module Reader
 
     class CSV
+      ENCODING = Encoding::ISO_8859_1
+
       CSV_OPTIONS = {
         col_sep: ';',
         headers: false,
@@ -17,7 +19,7 @@ module EfoNelfo
 
       def initialize(options)
         if options[:filename]
-          @data = File.read(options[:filename], encoding: Encoding::ISO_8859_1)
+          @data = File.read(options[:filename], encoding: ENCODING)
         else
           @data = options[:data]
         end
