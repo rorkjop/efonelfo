@@ -1,10 +1,10 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe EfoNelfo::Property do
+describe EfoNelfo::Properties do
 
   class Foo
-    include EfoNelfo::Property
+    include EfoNelfo::Properties
     property :foo, alias: "Føbar", limit: 3, default: 'I am foo'
     property :bar
     property :date, type: :date
@@ -18,7 +18,7 @@ describe EfoNelfo::Property do
   it "raises an error if trying to add duplicate property" do
     lambda {
       class Bar
-        include EfoNelfo::Property
+        include EfoNelfo::Properties
         property :foo
         property :foo
       end
@@ -28,7 +28,7 @@ describe EfoNelfo::Property do
   it "raises an error if trying to assign an unsupported option" do
     lambda {
       class Bar
-        include EfoNelfo::Property
+        include EfoNelfo::Properties
         property :lame, funny: true
       end
     }.must_raise EfoNelfo::UnknownPropertyOption
@@ -112,7 +112,6 @@ describe EfoNelfo::Property do
 
     end
 
-
   end
 
   describe ".properties" do
@@ -139,6 +138,12 @@ describe EfoNelfo::Property do
       obj.doable = true
       obj.to_a.must_equal ["I am foo", nil, "20120530", 3, "J", "NO"]
     end
+  end
+
+  describe "#to_f" do
+    # it "converts the value with correct decimals" do
+    #   props[:foo]
+    # end
   end
 
 end

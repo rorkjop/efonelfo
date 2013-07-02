@@ -1,6 +1,6 @@
 module EfoNelfo
 
-  module Property
+  module Properties
 
     def self.included(base)
       base.send :extend, ClassMethods
