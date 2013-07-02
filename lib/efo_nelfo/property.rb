@@ -4,6 +4,11 @@ module EfoNelfo
 
     attr_reader :name, :options, :value
 
+    def self.validate_options!(options)
+      invalid_options = options.keys - VALID_OPTIONS
+      raise EfoNelfo::UnknownPropertyOption.new("Invalid options: #{invalid_options.join(',')}") if invalid_options.any?
+    end
+
     def initialize(name, defaults={})
       options = {
         type:      :string,
@@ -15,8 +20,7 @@ module EfoNelfo
       }
       options.update(defaults) if defaults.is_a?(Hash)
 
-      invalid_options = options.keys - VALID_OPTIONS
-      raise EfoNelfo::UnknownPropertyOption.new("Invalid option for #{name}: #{invalid_options.join(',')}") if invalid_options.any?
+      self.class.validate_options! options
 
       @name      = name
       @options   = options

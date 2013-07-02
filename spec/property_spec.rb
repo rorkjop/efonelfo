@@ -61,4 +61,9 @@ describe EfoNelfo::Property do
     }.must_raise EfoNelfo::UnknownPropertyOption
   end
 
+  it ".validate_options! raises error when passing invalid options" do
+    lambda {
+      EfoNelfo::Property.validate_options! foo: 'bar'
+    }.must_raise EfoNelfo::UnknownPropertyOption
+  end
 end
