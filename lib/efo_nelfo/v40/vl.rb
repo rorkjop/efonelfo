@@ -33,6 +33,23 @@ module EfoNelfo
         info.map(&:image).compact
       end
 
+      [ :weight, :dimension, :volume, :fdv, :hms ].each do |key|
+        define_method key do
+          pick key
+        end
+      end
+
+      # Returns array of urls extracted from VX lines
+      def urls
+        info.map(&:value).select { |u| u.match %r{\Ahttps?://} }
+      end
+
+      private
+
+      def pick(method)
+        vx = info.select(&"#{method}?".to_sym).compact.first
+        vx && vx.send(method)
+      end
     end
   end
 end
