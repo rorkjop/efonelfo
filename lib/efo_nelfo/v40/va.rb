@@ -8,7 +8,7 @@ module EfoNelfo
       property :sales_package,  alias: :SalgsPakning, limit: 9, type: :integer
 
       def nrf_id
-        product_type == 4 && product_number
+        product_type == 4 && product_number.strip
       end
 
       def replacement?
