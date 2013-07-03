@@ -6,6 +6,27 @@ module EfoNelfo
       property :product_number, alias: :VareNr,       limit: 14, required: true
       property :type,           alias: :VaType,       limit: 1, required: true
       property :sales_package,  alias: :SalgsPakning, limit: 9, type: :integer
+
+      def nrf_id
+        product_type == 4 && product_number
+      end
+
+      def replacement?
+        type == 'E'
+      end
+
+      def alternative?
+        type == 'A'
+      end
+
+      def alternative_id?
+        type == 'V'
+      end
+
+      def package_size?
+        type == 'P'
+      end
+
     end
   end
 end
