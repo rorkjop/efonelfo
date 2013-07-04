@@ -33,6 +33,34 @@ describe EfoNelfo::V40::VL do
     vl.volume.must_be_nil
   end
 
+  it "#gross_price? returns true when price type is 'B'" do
+    vl.price_type = 'B'
+    vl.gross_price?.must_equal true
+    vl.net_price?.must_equal false
+  end
+
+  it "#gross_price returns price when price is gross" do
+    EfoNelfo::V40::VL.new(price: 2050, price_type: 'B').gross_price.must_equal 20.5
+  end
+
+  it "#net_price returns nil when price is gross" do
+    EfoNelfo::V40::VL.new(price: 2050, price_type: 'B').net_price.must_be_nil
+  end
+
+  it "#net_price returns price when price is net" do
+    EfoNelfo::V40::VL.new(price: 2050, price_type: 'N').net_price.must_equal 20.5
+  end
+
+  it "#gross_price returns nil when price is net" do
+    EfoNelfo::V40::VL.new(price: 2050, price_type: 'N').gross_price.must_be_nil
+  end
+
+  it "#net_price? returns true when price type is 'N'" do
+    vl.price_type = 'N'
+    vl.net_price?.must_equal true
+    vl.gross_price?.must_equal false
+  end
+
   it "#urls returns list of vx lines containing a url" do
     vl.info << { field: 'FOO', value: 'http://localhost/one?two'}
     vl.info << { field: 'BAR', value: 'http://foo.example.com/one/two/three'}

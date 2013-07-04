@@ -9,7 +9,7 @@ module EfoNelfo
       property :unit,              alias: :MåleEnhet,     limit: 1,  type: :integer, required: true
       property :price_unit,        alias: :PrisEnhet,     limit: 3,  required: true
       property :price_unit_desc,   alias: :PrisEnhetTxt,  limit: 8
-      property :price,             alias: :Pris,          limit: 10, type: :integer, required: true
+      property :price,             alias: :Pris,          limit: 10, decimals: 2, type: :integer, required: true
       property :amount,            alias: :Mengde,        limit: 9,  type: :integer, required: true
       property :price_date,        alias: :PrisDato,      limit: 8,  type: :date, required: true
       property :status,            alias: :Status,        limit: 1,  type: :integer, required: true
@@ -27,6 +27,22 @@ module EfoNelfo
 
       def nrf_id
         product_type == 4 ? product_number : nil
+      end
+
+      def gross_price?
+        price_type == 'B'
+      end
+
+      def gross_price
+        gross_price? ? properties[:price].to_f : nil
+      end
+
+      def net_price
+        net_price? ? properties[:price].to_f : nil
+      end
+
+      def net_price?
+        price_type == 'N'
       end
 
       def images
