@@ -39,6 +39,12 @@ describe EfoNelfo::V40::VL do
     vl.net_price?.must_equal false
   end
 
+  it "#gross_price? returns true when price type is nil" do
+    vl.price_type = nil
+    vl.gross_price?.must_equal true
+    vl.net_price?.must_equal false
+  end
+
   it "#gross_price returns price when price is gross" do
     EfoNelfo::V40::VL.new(price: 2050, price_type: 'B').gross_price.must_equal 20.5
   end

@@ -30,7 +30,7 @@ module EfoNelfo
       end
 
       def gross_price?
-        price_type == 'B'
+        price_type.nil? || price_type == 'B'
       end
 
       def gross_price
@@ -51,7 +51,7 @@ module EfoNelfo
 
       [ :weight, :dimension, :volume, :fdv, :hms ].each do |key|
         define_method key do
-          pick key
+          fetch_from_info key
         end
       end
 
@@ -62,7 +62,7 @@ module EfoNelfo
 
       private
 
-      def pick(method)
+      def fetch_from_info(method)
         vx = info.select(&"#{method}?".to_sym).compact.first
         vx && vx.send(method)
       end
