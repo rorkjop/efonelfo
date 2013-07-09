@@ -9,7 +9,7 @@ module EfoNelfo
       property :unit,              alias: :MåleEnhet,     limit: 1,  type: :integer, required: true
       property :price_unit,        alias: :PrisEnhet,     limit: 3,  required: true
       property :price_unit_desc,   alias: :PrisEnhetTxt,  limit: 8
-      property :price,             alias: :Pris,          limit: 10, type: :integer, required: true
+      property :price,             alias: :Pris,          limit: 10, decimals: 2, type: :integer, required: true
       property :amount,            alias: :Mengde,        limit: 9,  type: :integer, required: true
       property :price_date,        alias: :PrisDato,      limit: 8,  type: :date, required: true
       property :status,            alias: :Status,        limit: 1,  type: :integer, required: true
@@ -29,13 +29,29 @@ module EfoNelfo
         product_type == 4 ? product_number : nil
       end
 
+      def gross_price?
+        price_type.nil? || price_type == 'B'
+      end
+
+      def gross_price
+        gross_price? ? properties[:price].to_f : nil
+      end
+
+      def net_price
+        net_price? ? properties[:price].to_f : nil
+      end
+
+      def net_price?
+        price_type == 'N'
+      end
+
       def images
         info.map(&:image).compact
       end
 
       [ :weight, :dimension, :volume, :fdv, :hms ].each do |key|
         define_method key do
-          pick key
+          fetch_from_info key
         end
       end
 
@@ -46,7 +62,7 @@ module EfoNelfo
 
       private
 
-      def pick(method)
+      def fetch_from_info(method)
         vx = info.select(&"#{method}?".to_sym).compact.first
         vx && vx.send(method)
       end

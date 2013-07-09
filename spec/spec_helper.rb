@@ -10,3 +10,8 @@ Turn.config do |c|
   c.natural = true
   c.loadpath = %w(lib spec)
 end
+
+# helper method that returns full path to csv files
+def csv(filename)
+  File.expand_path("../samples/#{filename}", __FILE__)
+end
