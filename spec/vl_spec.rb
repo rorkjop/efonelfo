@@ -4,6 +4,31 @@ describe EfoNelfo::V40::VL do
 
   let(:vl) { EfoNelfo::V40::VL.new }
 
+  describe '.parse' do
+    let(:csv) { "VL;4;9455483;10-13 AF-2 Armaflex rull/krt.;35 mtr/krt. Cellegummi;2;MTR;METER;3500;10000;20130401;2;;P94551;ARMACELL G;;J;;;B" }
+    subject   { EfoNelfo::V40::VL.parse csv }
+
+    it { subject.must_be_instance_of EfoNelfo::V40::VL }
+
+    its(:product_type) { must_equal 4 }
+    its(:post_type) { must_equal "VL" }
+    its(:product_type) { must_equal 4 }
+    its(:product_number) { must_equal "9455483" }
+    its(:name) { must_equal "10-13 AF-2 Armaflex rull/krt." }
+    its(:description) { must_equal "35 mtr/krt. Cellegummi" }
+    its(:unit) { must_equal 2 }
+    its(:price_unit) { must_equal "MTR" }
+    its(:price_unit_desc) { must_equal "METER" }
+    its(:price) { must_equal 3500 }
+    its(:amount) { must_equal 10000 }
+    its(:price_date) { must_equal Date.new(2013,4,1) }
+    its(:status) { must_equal 2 }
+    its(:block_number) { must_be_nil }
+    its(:discount_group) { must_equal "P94551" }
+    its(:fabrication) { must_equal "ARMACELL G" }
+    its(:type) { must_be_nil }
+  end
+
   it "#weight returns the weight in gram" do
     vl.info << { field: 'VEKT', value: 250 }
     vl.weight.must_equal 250
