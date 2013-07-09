@@ -50,7 +50,7 @@ module EfoNelfo
         when date?
           new_value.is_a?(Date) ? new_value : Date.parse(new_value) rescue nil
         when integer?
-          new_value.nil? ? nil : new_value.to_i
+          new_value.nil? && !required? ? nil : new_value.to_i
         else
           new_value
       end
@@ -73,13 +73,13 @@ module EfoNelfo
 
     # Returns true if the property is read only
     def readonly?
-      options[:read_only]
+      options[:read_only] == true
     end
 
     # Returns true if the property is required
     # Note: this is not in use yet
     def required?
-      options[:required]
+      options[:required] == true
     end
 
     def boolean?; type == :boolean; end

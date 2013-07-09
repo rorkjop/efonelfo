@@ -106,6 +106,10 @@ describe EfoNelfo::Property do
         property.value.must_be_nil
       end
 
+      it "nil becomes 0 when property is required" do
+        property.options[:required] = false
+      end
+
     end
 
   end
@@ -157,9 +161,10 @@ describe EfoNelfo::Property do
 
     describe "type is :integer" do
       let(:type) { :integer }
-      it { make_property(2).must_equal 2 }
-      it { make_property(100, type: :integer, decimals: 4).must_equal 100 }
+      it { make_property(2).must_equal "2" }
+      it { make_property(100, type: :integer, decimals: 4).must_equal "100" }
       it { make_property(nil, type: :integer, decimals: 2).must_equal nil }
+      it { make_property(nil, type: :integer, required: true).must_equal "0" }
     end
 
     describe "type is :boolean" do

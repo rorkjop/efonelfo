@@ -29,7 +29,7 @@ module EfoNelfo
 
       def parse
         # Create the head object based on the first row
-        head = parse_head csv.first
+        head = parse_head first
         head.source = @data
 
         # Read rest of the file and add them to the head
@@ -38,11 +38,15 @@ module EfoNelfo
           klass = EfoNelfo::PostType.for row[0], head.version
           next if klass.nil?
 
-          line = initialize_object_with_properties klass, row
-          head.add line
+          head.add klass.new(row)
         end
 
         head
+      end
+
+      # Returns the first row of the csv file
+      def first
+        csv.first
       end
 
       private
@@ -50,16 +54,7 @@ module EfoNelfo
       def parse_head(row)
         klass = EfoNelfo::PostType.for row[0], row[2]
         raise EfoNelfo::UnsupportedPostType.new("Don't know how to handle v#{row[2]} of #{row[0]}") if klass.nil?
-
-        initialize_object_with_properties klass, row
-      end
-
-      def initialize_object_with_properties(klass, columns)
-        object = klass.new
-        object.class.properties.each_with_index do |property, i|
-          object.send "#{property.first}=", columns[i]
-        end
-        object
+        klass.new row
       end
 
     end

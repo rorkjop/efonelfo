@@ -142,7 +142,7 @@ describe EfoNelfo::Properties do
       obj.date = Date.new 2012, 5, 30
       obj.number = 3
       obj.doable = true
-      obj.to_a.must_equal ["I am foo", nil, "20120530", 3, "J", "NO"]
+      obj.to_a.must_equal ["I am foo", nil, "20120530", "3", "J", "NO"]
     end
   end
 

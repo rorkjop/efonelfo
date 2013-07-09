@@ -35,10 +35,18 @@ module EfoNelfo
         self.for(hash[:post_type], hash[:version]).new(hash)
       end
 
+      def parse(csv)
+        new EfoNelfo::Reader::CSV.new(data: csv).first
+      end
+
     end
 
     def initialize(*args)
-      initialize_attributes(*args)
+      if args && args.first.is_a?(Array)
+        initialize_attributes Hash[properties.keys.zip(args.first)]
+      else
+        initialize_attributes(*args)
+      end
     end
 
     def post_type

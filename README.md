@@ -16,7 +16,11 @@ Supported formats:
 
 Importing a CSV file:
 
-    # EfoNelfo.parse_csv "B12345678.332.csv"    # => EfoNelfo::V40::Order
+    # EfoNelfo.load "B12345678.332.csv"          # => EfoNelfo::V40::VH
+    
+Parsing CSV:
+
+    # EfoNelfo.parse "VH;EFONELFO;4.0;foo;bar"   # => EfoNelfo::V40::VH
 
 Exporting CSV:
 
