@@ -46,9 +46,4 @@ describe "parsing a BH.csv file" do
     order.lines.first.text.first.to_s.must_equal "Her er litt fritekst"
   end
 
-  it "stores the contents file in the Order object" do
-    filename = csv('B650517.032.csv')
-    order = EfoNelfo.load(filename)
-    order.source.must_equal File.read(filename)
-  end
 end

@@ -1,6 +1,5 @@
 module EfoNelfo
   module PostHeadType
-    attr_accessor :source
 
     def self.included(base)
       base.send :property, :post_type,  alias: :PostType,      limit: 2, default: base.post_type

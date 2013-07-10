@@ -30,7 +30,6 @@ module EfoNelfo
       def parse
         # Create the head object based on the first row
         head = parse_head first
-        head.source = @data
 
         # Read rest of the file and add them to the head
         csv.each do |row|

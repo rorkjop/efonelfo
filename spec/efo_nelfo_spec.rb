@@ -84,11 +84,10 @@ describe EfoNelfo do
 
 
   describe ".parse" do
-    it "does the same as .load" do
-      filename = csv('B650517.032.csv')
-      parsed = EfoNelfo.parse File.read(filename)
-      loaded = EfoNelfo.load filename
-      parsed.source.must_equal loaded.source
+    it "uses the CSV reader to parse the input" do
+      input  = File.read csv('B650517.032.csv')
+      result = EfoNelfo.parse(input)
+      result.must_be_instance_of EfoNelfo::V40::BH
     end
   end
 
