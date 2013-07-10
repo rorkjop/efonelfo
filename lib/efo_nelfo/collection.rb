@@ -26,6 +26,10 @@ module EfoNelfo
       @list << obj
     end
 
+    def delete(index)
+      @list.delete_at index
+    end
+
     def to_a
       map(&:to_a).flatten(1)
     end

@@ -1,6 +1,21 @@
 require 'spec_helper'
 
 describe EfoNelfo::Collection do
+  module EfoNelfo
+    module V21
+      class MyType < EfoNelfo::PostType
+        property :whatever
+        property :version
+      end
+
+      class BT < EfoNelfo::PostType
+        property :post_type
+        property :whatever
+        property :version
+      end
+    end
+  end
+
   Owner = Class.new do
     def self.version_from_class
       '21'
@@ -15,21 +30,13 @@ describe EfoNelfo::Collection do
     array.post_type.must_equal "BT"
   end
 
-  describe "<<" do
-    module EfoNelfo
-      module V21
-        class MyType < EfoNelfo::PostType
-          property :whatever
-          property :version
-        end
+  it ".delete removes the element at given position" do
+    array << { post_type: "BT", whatever: 'blah' }
+    array.delete(0)
+    array.size.must_equal 0
+  end
 
-        class BT < EfoNelfo::PostType
-          property :post_type
-          property :whatever
-          property :version
-        end
-      end
-    end
+  describe "<<" do
 
     describe "passing a hash" do
       let(:hash) {
