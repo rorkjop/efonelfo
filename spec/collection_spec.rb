@@ -1,6 +1,21 @@
 require 'spec_helper'
 
 describe EfoNelfo::Collection do
+  module EfoNelfo
+    module V21
+      class MyType < EfoNelfo::PostType
+        property :whatever
+        property :version
+      end
+
+      class BT < EfoNelfo::PostType
+        property :post_type
+        property :whatever
+        property :version
+      end
+    end
+  end
+
   Owner = Class.new do
     def self.version_from_class
       '21'
@@ -15,21 +30,13 @@ describe EfoNelfo::Collection do
     array.post_type.must_equal "BT"
   end
 
-  describe "<<" do
-    module EfoNelfo
-      module V21
-        class MyType < EfoNelfo::PostType
-          property :whatever
-          property :version
-        end
+  it ".delete removes the element at given position" do
+    array << { post_type: "BT", whatever: 'blah' }
+    array.delete(0)
+    array.size.must_equal 0
+  end
 
-        class BT < EfoNelfo::PostType
-          property :post_type
-          property :whatever
-          property :version
-        end
-      end
-    end
+  describe "<<" do
 
     describe "passing a hash" do
       let(:hash) {
@@ -63,6 +70,27 @@ describe EfoNelfo::Collection do
         lambda { array << obj }.must_raise(EfoNelfo::InvalidPostType)
       end
     end
+  end
+
+  describe "#find_by" do
+    before do
+      array << { post_type: 'BT', whatever: 'foo' }
+      array << { post_type: 'BT', whatever: 'bar' }
+    end
+
+    it "returns the matching rows" do
+      array.find_by(whatever: 'foo').must_be_instance_of Array
+      array.find_by(whatever: 'foo').first.must_be_instance_of EfoNelfo::V21::BT
+    end
+
+    it "returns empty array when no rows could be found" do
+      array.find_by(whatever: 'barr').must_be_empty
+    end
+
+    it "returns empty array when trying to search for a key that doesn't exist" do
+      array.find_by(blue_dragon_breath: 'wtf').must_be_empty
+    end
+
   end
 
 end

@@ -27,12 +27,8 @@ module EfoNelfo
         @csv = ::CSV.new @data, CSV_OPTIONS
       end
 
+      # Parses the data and returns an EfoNelfo object of some kind
       def parse
-        # Create the head object based on the first row
-        head = parse_head first
-        head.source = @data
-
-        # Read rest of the file and add them to the head
         csv.each do |row|
           # Find the correct posttype module for given posttype and version
           klass = EfoNelfo::PostType.for row[0], head.version
@@ -46,15 +42,16 @@ module EfoNelfo
 
       # Returns the first row of the csv file
       def first
-        csv.first
+        return @first if @first
+        csv.rewind
+        @first = csv.first
       end
 
-      private
-
-      def parse_head(row)
-        klass = EfoNelfo::PostType.for row[0], row[2]
-        raise EfoNelfo::UnsupportedPostType.new("Don't know how to handle v#{row[2]} of #{row[0]}") if klass.nil?
-        klass.new row
+      def head
+        return @head if @head
+        klass = EfoNelfo::PostType.for first[0], first[2]
+        raise EfoNelfo::UnsupportedPostType.new("Don't know how to handle v#{first[2]} of #{first[0]}") if klass.nil?
+        @head = klass.new first
       end
 
     end
