@@ -5,7 +5,7 @@ module EfoNelfo
       property :product_type,      alias: :VareMrk,       limit: 1,  type: :integer, required: true
       property :product_number,    alias: :VareNr,        limit: 14, required: true
       property :price,             alias: :AvtaltPris,    limit: 10, type: :integer
-      property :discount,          alias: :Rabatt,        limit: 2,  required: true
+      property :discount,          alias: :Rabatt,        limit: 2,  required: true, type: :integer, decimals: 2
       property :text,              alias: :Tekst,         limit: 30
     end
   end
