@@ -34,6 +34,12 @@ module EfoNelfo
       map(&:to_a).flatten(1)
     end
 
+    # find_by property_name: 'test'
+    def find_by(args)
+      key = args.keys.first; value = args.values.first
+      @list.select { |l| l.respond_to?(key) && l.public_send(key) == value }
+    end
+
     private
     attr_reader :list
 

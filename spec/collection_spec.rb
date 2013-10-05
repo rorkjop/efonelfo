@@ -72,4 +72,25 @@ describe EfoNelfo::Collection do
     end
   end
 
+  describe "#find_by" do
+    before do
+      array << { post_type: 'BT', whatever: 'foo' }
+      array << { post_type: 'BT', whatever: 'bar' }
+    end
+
+    it "returns the matching rows" do
+      array.find_by(whatever: 'foo').must_be_instance_of Array
+      array.find_by(whatever: 'foo').first.must_be_instance_of EfoNelfo::V21::BT
+    end
+
+    it "returns empty array when no rows could be found" do
+      array.find_by(whatever: 'barr').must_be_empty
+    end
+
+    it "returns empty array when trying to search for a key that doesn't exist" do
+      array.find_by(blue_dragon_breath: 'wtf').must_be_empty
+    end
+
+  end
+
 end
