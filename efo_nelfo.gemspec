@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "awesome_print"
   spec.add_development_dependency "guard-minitest"
+  spec.add_development_dependency "minitest", "< 5"
   spec.add_development_dependency "rb-fsevent"
   spec.add_development_dependency "terminal-notifier-guard"
   spec.add_development_dependency "turn"
