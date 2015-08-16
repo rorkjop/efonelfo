@@ -17,7 +17,7 @@ Supported formats:
 Importing a CSV file:
 
     # EfoNelfo.load "B12345678.332.csv"          # => EfoNelfo::V40::VH
-    
+
 Parsing CSV:
 
     # EfoNelfo.parse "VH;EFONELFO;4.0;foo;bar"   # => EfoNelfo::V40::VH
@@ -25,8 +25,9 @@ Parsing CSV:
 Exporting CSV:
 
     # order = EfoNelfo::V40::VH.new
-    # order.add EfoNelfo::V40::VL.new item_number: '442', order_number: 'abc'
+    # order.add EfoNelfo::V40::VL.new name: 'Something', price: 10
     # order.to_csv
+    # => "VH;EFONELFO;4.0;;;;;;;;;;;;;;\r\nVL;;;Something;;;;;10;;;;;;;;;;;\r\n"
 
 
 ## TODO
