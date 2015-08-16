@@ -58,7 +58,7 @@ module EfoNelfo
 
     # returns formatted value suitable for csv output
     def to_csv
-      output = value.to_csv
+      value.to_csv
     end
 
     # Returns integer to floating point based on specified decimals
