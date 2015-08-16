@@ -34,12 +34,16 @@ module EfoNelfo
       property :receiver_office,             alias: :LPostSted,     limit: 35
       property :receiver_country,            alias: :LLandK,        limit: 2
 
-      property :buyer_name,                  alias: :KFirmaNavn,    limit: 35
+      property :buyer_company_name,          alias: :KFirmaNavn,    limit: 35
       property :buyer_address1,              alias: :KAdr1,         limit: 35
       property :buyer_address2,              alias: :KAdr2,         limit: 35
       property :buyer_zip,                   alias: :KPostNr,       limit: 9
       property :buyer_office,                alias: :KPostSted,     limit: 35
       property :buyer_country,               alias: :KLandK,        limit: 2
+      property :buyer_name,                  alias: :KNavn,         limit: 35
+      property :buyer_phone,                 alias: :KTelefon,      limit: 15
+      property :buyer_mobile,                alias: :KMob,          limit: 15
+      property :buyer_fax,                   alias: :KFax,          limit: 15
       property :buyer_email,                 alias: :KEPost,        limit: 60
       property :buyer_web,                   alias: :KWebAdr,       limit: 40
 
