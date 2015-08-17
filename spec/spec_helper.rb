@@ -25,7 +25,7 @@ class MiniTest::Spec
       let(:inner_subject) { subject.send(attribute) }
 
       it "verify subject.#{attribute} for" do
-        inner_subject.instance_eval &block
+        inner_subject.instance_eval(&block)
       end
     end
   end

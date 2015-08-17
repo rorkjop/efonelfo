@@ -26,11 +26,11 @@ describe EfoNelfo::V40::BH do
     end
 
     it "includes standard fields" do
-      csv.must_match /;EFONELFO;/
-      csv.must_match /;4.0;/
-      csv.must_match /;123;/
-      csv.must_match /;456;/
-      csv.must_match /;J;/              # for fixing sublime syntax highlighting: /
+      csv.must_match(/;EFONELFO;/)
+      csv.must_match(/;4.0;/)
+      csv.must_match(/;123;/)
+      csv.must_match(/;456;/)
+      csv.must_match(/;J;/)
     end
 
     it "can be parsed" do
@@ -41,11 +41,11 @@ describe EfoNelfo::V40::BH do
 
     it "adds order lines" do
       order.add EfoNelfo::V40::BL.new(order_number: 'foo', item_name: 'Ware')
-      csv.must_match /Ware/
+      csv.must_match(/Ware/)
     end
 
     it "adds text to order line" do
-      csv.must_match /BT;haha/
+      csv.must_match(/BT;haha/)
     end
 
   end
