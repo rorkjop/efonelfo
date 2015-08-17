@@ -20,10 +20,6 @@ module EfoNelfo
 
       has_many :text, post_type: "BT"
 
-      def format_item_count
-        item_count ? item_count * 100 : nil
-      end
-
     end
 
   end
