@@ -43,7 +43,7 @@ describe EfoNelfo::PostType do
   end
 
   describe ".from" do
-    let(:hash) {
+    let(:a_hash) {
       {
         post_type: "AB",
         version: "2.1",
@@ -54,7 +54,7 @@ describe EfoNelfo::PostType do
       }
     }
 
-    let(:pt) { EfoNelfo::PostType.from hash }
+    let(:pt) { EfoNelfo::PostType.from a_hash }
 
     it "converts the hash into a valid posttype" do
       pt.must_be_instance_of EfoNelfo::V21::AB

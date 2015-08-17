@@ -39,17 +39,17 @@ describe EfoNelfo::Collection do
   describe "<<" do
 
     describe "passing a hash" do
-      let(:hash) {
+      let(:a_hash) {
         { post_type: "BT", version: "2.1", whatever: 'blah' }
       }
 
       it "accepts a valid hash" do
-        array << hash
+        array << a_hash
         array.size.must_equal 1
       end
 
       it "converts the hash into a post type" do
-        array << hash
+        array << a_hash
         array[0].must_be_instance_of EfoNelfo::V21::BT
         array[0].whatever.must_equal 'blah'
       end

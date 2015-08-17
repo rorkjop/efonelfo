@@ -1,15 +1,15 @@
 require 'efo_nelfo'
 
-require 'turn/autorun'
+require 'minitest/autorun'
 require 'minitest/spec'
-require 'minitest/pride'
+require 'minitest/reporters'
 require 'awesome_print'
 
-Turn.config do |c|
-  c.format = :progress
-  c.natural = true
-  c.loadpath = %w(lib spec)
-end
+Minitest::Reporters.use!(
+  Minitest::Reporters::SpecReporter.new,
+  ENV,
+  Minitest.backtrace_filter
+)
 
 # helper method that returns full path to csv files
 def csv(filename)
