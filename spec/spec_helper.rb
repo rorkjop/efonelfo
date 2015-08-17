@@ -1,5 +1,7 @@
-require 'efo_nelfo'
+require 'codeclimate-test-reporter'
+CodeClimate::TestReporter.start
 
+require 'efo_nelfo'
 require 'minitest/autorun'
 require 'minitest/spec'
 require 'minitest/reporters'

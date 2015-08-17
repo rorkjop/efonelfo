@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rb-fsevent"
   spec.add_development_dependency "terminal-notifier"
   spec.add_development_dependency "terminal-notifier-guard"
+  spec.add_development_dependency "codeclimate-test-reporter"
 end
