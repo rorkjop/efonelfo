@@ -39,8 +39,37 @@ describe EfoNelfo::Properties do
   end
 
   it "adds a setter method for :foo" do
-    obj.foo = 'Test'
-    obj.foo.must_equal 'Test'
+    obj.foo = 'abc'
+    obj.foo.must_equal 'abc'
+  end
+
+  it "cuts off strings longer than the limit" do
+    obj.foo = "Long string"
+    obj.foo.must_equal "Lon"
+  end
+
+  it "won't cut off strings" do
+    # bar has no limit specified, uses defaults
+    obj.bar = "hahaha"
+    obj.bar.must_equal "hahaha"
+
+    # numbers are ignored, even if specified type is string
+    obj.bar = 123
+    obj.bar.must_equal 123
+
+    obj.foo = 123456
+    obj.foo.must_equal 123456
+
+    obj.foo = "123456"
+    obj.foo.must_equal "123"
+  end
+
+  it "raises exception if string is longer than limit and strict_mode is enabled" do
+    EfoNelfo.strict_mode = true
+    lambda {
+      obj.foo = "Long"
+    }.must_raise ArgumentError
+    EfoNelfo.strict_mode = false
   end
 
   it "adds a question method for boolean types" do
@@ -55,11 +84,11 @@ describe EfoNelfo::Properties do
   end
 
   it "adds an alias getter and setter for foo" do
-    obj.foo = 'Test'
-    obj.Føbar.must_equal 'Test'
-    obj.Føbar = 'Hacked'
-    obj.Føbar.must_equal 'Hacked'
-    obj.foo.must_equal 'Hacked'
+    obj.foo = 'ABC'
+    obj.Føbar.must_equal 'ABC'
+    obj.Føbar = 'CDE'
+    obj.Føbar.must_equal 'CDE'
+    obj.foo.must_equal 'CDE'
   end
 
   it "assigns default values" do

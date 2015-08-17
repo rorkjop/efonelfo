@@ -23,6 +23,14 @@ module EfoNelfo
 
   class << self
 
+    def strict_mode?
+      @strict_mode || false
+    end
+
+    def strict_mode=(mode)
+      @strict_mode = mode
+    end
+
     def load(filename)
       Reader::CSV.new(filename: filename).parse
     end
