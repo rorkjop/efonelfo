@@ -38,7 +38,7 @@ describe EfoNelfo::PostType do
     it "converts the posttype to csv" do
       pt = EfoNelfo::V21::AB.new seller_id: '123'
       pt.lines << EfoNelfo::V21::XY.new(order_number: '41')
-      pt.to_csv.must_match /AB;21;123.+XY;41/m
+      pt.to_csv.must_match(/AB;21;123.+XY;41/m)
     end
   end
 

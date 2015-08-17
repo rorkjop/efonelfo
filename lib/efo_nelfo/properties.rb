@@ -27,7 +27,7 @@ module EfoNelfo
 
     # Returns all property values as array formatted for csv
     def to_a
-      properties.values.map &:to_csv
+      properties.values.map(&:to_csv)
     end
 
     private
