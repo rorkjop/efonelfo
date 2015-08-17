@@ -25,7 +25,7 @@ describe EfoNelfo do
   describe "assign via hash" do
     let(:json) {
       { customer_id: "123",
-        order_number: "abc-123-efg",
+        order_number: "abc-123-ef",
         seller_warehouse: "Somewhere",
         label: "Some label",
         lines: [
@@ -43,7 +43,7 @@ describe EfoNelfo do
     end
 
     it "assigns attributes" do
-      order.order_number.must_equal "abc-123-efg"
+      order.order_number.must_equal "abc-123-ef"
       order.seller_warehouse.must_equal "Somewhere"
     end
 

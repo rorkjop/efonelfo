@@ -43,17 +43,7 @@ module EfoNelfo
     #   (string)  value = 'foo'       # => 'foo'
     def value=(new_value)
       return nil if readonly?
-
-      @value = case
-        when boolean?
-          new_value.nil? || new_value == true || new_value == 'J' || new_value == 'j' || new_value == '' ? true : false
-        when date?
-          new_value.is_a?(Date) ? new_value : Date.parse(new_value) rescue nil
-        when integer?
-          new_value.nil? && !required? ? nil : new_value.to_i
-        else
-          new_value
-      end
+      @value = send("sanitize_#{options[:type]}", new_value)
     end
 
     # returns formatted value suitable for csv output
@@ -89,6 +79,34 @@ module EfoNelfo
 
     def method_missing(*args)
       options.has_key?(args.first) ? options[args.first] : super
+    end
+
+    private
+
+    def sanitize_integer(value)
+      value.nil? && !required? ? nil : value.to_i
+    end
+
+    def sanitize_boolean(value)
+      value.nil? || value == true || value == 'J' || value == 'j' || value == '' ? true : false
+    end
+
+    def sanitize_date(value)
+      value.is_a?(Date) ? value : Date.parse(value) rescue nil
+    end
+
+    def sanitize_string(value)
+      return nil if value.nil?
+      return value unless value.is_a?(String)
+
+      string = value.to_s
+
+      if EfoNelfo.strict_mode? && (options[:limit] && string.length > options[:limit])
+        raise ArgumentError.new("Value exceeds limit")
+      else
+        string.slice(0, options[:limit])
+      end
+
     end
 
   end

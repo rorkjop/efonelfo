@@ -10,7 +10,7 @@ describe "parsing a VH.csv file" do
     nelfo.format.must_equal "EFONELFO"
     nelfo.version.must_equal "4.0"
     nelfo.post_type.must_equal "VH"
-    nelfo.SelgersId.must_equal "NO1234567879MVA"
+    nelfo.SelgersId.must_equal "NO123456787MVA"
     nelfo.KjøpersId.must_be_nil
     nelfo.KundeNr.must_be_nil
     nelfo.from_date.must_equal Date.new(2004, 1, 22)
