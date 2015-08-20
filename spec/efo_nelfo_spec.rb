@@ -89,6 +89,13 @@ describe EfoNelfo do
       result = EfoNelfo.parse(input)
       result.must_be_instance_of EfoNelfo::V40::BH
     end
+
+    it "forces encoding to ISO-8859-1" do
+      input = File.read(csv("B028579.594.csv"))
+      input.encoding.to_s.must_equal "UTF-8"
+      # This should pass without raising an exception
+      EfoNelfo.parse(input)
+    end
   end
 
 end
