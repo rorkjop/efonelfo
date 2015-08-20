@@ -27,6 +27,7 @@ module EfoNelfo
       @strict_mode || false
     end
 
+    # In strict mode, EfoNelfo will raise exceptions when a value exceeds the property limit
     def strict_mode=(mode)
       @strict_mode = mode
     end
