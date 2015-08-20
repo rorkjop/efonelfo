@@ -21,7 +21,7 @@ module EfoNelfo
         if options[:filename]
           @data = File.read(options[:filename], encoding: ENCODING)
         else
-          @data = options[:data]
+          @data = options[:data].force_encoding ENCODING
         end
 
         @csv = ::CSV.new @data, CSV_OPTIONS
