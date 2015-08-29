@@ -7,7 +7,7 @@ module EfoNelfo
       property :seller_id,                   alias: :SelgersId,      limit: 14, required: true
       property :buyer_id,                    alias: :KjøpersId,      limit: 14
       property :production_date,             alias: :ProdDato,       limit: 8,  required: true, type: :date
-      property :confirmation_number,         alias: :BekreftelsesNr, limit: 13, required: true
+      property :confirmation_number,         alias: :BekreftelseNr,  limit: 13, required: true
       property :seller_order_number,         alias: :SOrdNr,         limit: 10
       property :order_number,                alias: :BestNr,         limit: 10
       property :customer_id,                 alias: :KundeNr,        limit: 10, required: true

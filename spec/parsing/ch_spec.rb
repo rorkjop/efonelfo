@@ -12,7 +12,7 @@ describe "parsing a CH.csv file" do
     order.format.must_equal "EFONELFO"
     order.version.must_equal "4.0"
 
-    order.BekreftelsesNr.must_equal "52104503D0001"
+    order.BekreftelseNr.must_equal "52104503D0001"
     order.SOrdNr.must_equal "52104503D"
     order.BestNr.must_equal "BE0000 23"
     order.KundeNr.must_equal "2110310"
