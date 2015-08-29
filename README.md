@@ -14,6 +14,7 @@ Supported formats:
 * Bestilling (BH, BL, BT)
 * Vareformat (VH, VL, VX, VA)
 * Rabatt (RH, RL)
+* Ordrebekreftelse (CH, CL, CT)
 
 ## Usage
 
