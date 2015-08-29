@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "parsing a CH.csv file" do
   it "uses the correct version" do
-    lambda { EfoNelfo.load(csv('C4.v3.csv')) }.must_raise EfoNelfo::UnsupportedPostType
+    lambda { EfoNelfo.load(csv('C4.V3.csv')) }.must_raise EfoNelfo::UnsupportedPostType
   end
 
   it "parses the file and returns an OrderConfirmation" do
