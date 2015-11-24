@@ -157,6 +157,7 @@ describe EfoNelfo::Property do
       it { make_property("A string").must_equal "A string" }
       it { make_property(nil).must_equal nil }
       it { make_property("Sjøhest").encoding.must_equal Encoding::ISO_8859_1 }
+      it { make_property("").must_equal nil }
     end
 
     describe "type is :integer" do

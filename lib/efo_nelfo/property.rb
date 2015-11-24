@@ -96,8 +96,8 @@ module EfoNelfo
     end
 
     def sanitize_string(value)
-      return nil if value.nil?
       return value unless value.is_a?(String)
+      return nil if /\A[[:space:]]*\z/ === value
 
       string = value.to_s
 
