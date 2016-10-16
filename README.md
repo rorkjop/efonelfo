@@ -1,8 +1,5 @@
 # EfoNelfo
 
-[![Codeship Status for rorkjop/efonelfo](https://codeship.com/projects/2f24e110-26db-0133-3264-3e76e843c90e/status?branch=master)](https://codeship.com/projects/97199)
-[![Code Climate](https://codeclimate.com/github/rorkjop/efonelfo/badges/gpa.svg)](https://codeclimate.com/github/rorkjop/efonelfo)
-
 Gem for parsing and writing EfoNelfo documents.
 
 Supported EfoNelfo versions:
