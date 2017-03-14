@@ -155,16 +155,16 @@ describe EfoNelfo::Property do
     describe "type is :string" do
       let(:type) { :string }
       it { make_property("A string").must_equal "A string" }
-      it { make_property(nil).must_equal nil }
+      it { make_property(nil).must_be_nil }
       it { make_property("Sjøhest").encoding.must_equal Encoding::ISO_8859_1 }
-      it { make_property("").must_equal nil }
+      it { make_property("").must_be_nil }
     end
 
     describe "type is :integer" do
       let(:type) { :integer }
       it { make_property(2).must_equal "2" }
       it { make_property(100, type: :integer, decimals: 4).must_equal "100" }
-      it { make_property(nil, type: :integer, decimals: 2).must_equal nil }
+      it { make_property(nil, type: :integer, decimals: 2).must_be_nil }
       it { make_property(nil, type: :integer, required: true).must_equal "0" }
     end
 
