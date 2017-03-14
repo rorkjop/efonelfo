@@ -30,7 +30,7 @@ module EfoNelfo
       end
     end
 
-    refine Fixnum do
+    refine Integer do
       def to_csv
         to_s
       end
