@@ -1,9 +1,7 @@
 # EfoNelfo
 
 [![Code Climate](https://codeclimate.com/github/rorkjop/efonelfo/badges/gpa.svg)](https://codeclimate.com/github/rorkjop/efonelfo)
-
 [![Test Coverage](https://codeclimate.com/github/rorkjop/efonelfo/badges/coverage.svg)](https://codeclimate.com/github/rorkjop/efonelfo/coverage)
-
 [![Build Status](https://travis-ci.org/rorkjop/efonelfo.svg?branch=master)](https://travis-ci.org/rorkjop/efonelfo)
 
 Gem for parsing and writing EfoNelfo documents.
